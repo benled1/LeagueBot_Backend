@@ -2,3 +2,7 @@ asgiref==3.5.0
 Django==4.0.3
 sqlparse==0.4.2
 psycopg2>=2.9.3
+pandas==1.3.5
+requests==2.27.1
+ratelimit==2.2.1
+django_subcommands==2020.12.3
