@@ -6,11 +6,10 @@ from django.forms import CharField, IntegerField, JSONField
 class Test(models.Model):
     first_attr = models.CharField(max_length=30)
 
-
 class Match(models.Model):
     match_id = models.CharField(primary_key = True, max_length=30, default=0)
     duration = models.IntegerField(null=True)
-    start_time = models.IntegerField(null=True)
+    start_time = models.BigIntegerField(null=True)
     game_mode = models.CharField(null=True, max_length=30)
     patch = models.CharField(null=True, max_length=30)
 

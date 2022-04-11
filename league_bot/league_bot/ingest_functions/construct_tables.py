@@ -63,7 +63,8 @@ def calc_match_table(match_hist_ids):
         match_object = get_matches.get_match_details(match_id=match_id)
         if match_object is None:
             continue
-        row_values = {"duration": match_object['info']['gameDuration'],
+        row_values = {"match_id": match_object["metadata"]['matchId'],
+                      "duration": match_object['info']['gameDuration'],
                       "start_time": match_object['info']['gameStartTimestamp'],
                       "game_mode": match_object['info']['gameMode'],
                       "patch": match_object['info']['gameVersion'][:4]}
