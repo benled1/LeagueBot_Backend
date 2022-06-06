@@ -24,6 +24,7 @@ RESPONSE CODES USING IF ELSE.
 @sleep_and_retry
 @limits(calls=90, period=120)
 def get_puuid(summoner_name):
+    
     """
     Take a list of summoner names that belong to Challenger League players. This list is retrieved from
     the get_challenger_players() function. Make calls to the players to retrieve the puuids of the players.
@@ -37,16 +38,16 @@ def get_puuid(summoner_name):
         f"https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/{quote(summoner_name)}",
         headers=header)
 
-    if response.status_code == 403:
-        print("ERROR 403 OCCURRED")
+
     if response.status_code != 200:
+        print(response.status_code)
         return None
 
     content = response.content
     summoner_dict = json.loads(content)
 
     puuid = summoner_dict['puuid']
-    print(f"PUUID: {summoner_name} {type(puuid)}")
+    # print(f"PUUID: {summoner_name} {type(puuid)}")
     return puuid
 
 
@@ -73,7 +74,7 @@ def get_challenger_players():
     for summoner in chall_entries:
         chall_summoners.append(summoner['summonerName'])
 
-    print(f"Challenger Players: {type(chall_summoners)}")
+    # print(f"Challenger Players: {type(chall_summoners)}")
 
     return chall_summoners
 

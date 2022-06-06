@@ -36,7 +36,7 @@ def get_match_history(puuid, length=20):
     match_id_list = response.content
     match_id_list = ast.literal_eval(match_id_list.decode('UTF-8'))
 
-    print(f"Match History: {puuid} {type(match_id_list)}")
+    # print(f"Match History: {puuid} {type(match_id_list)}")
 
     return match_id_list
 
@@ -57,11 +57,12 @@ def get_match_details(match_id):
         return None
 
     match_details = response.content
-    print(type(match_details))
+    # print(type(match_details))
     match_details = json.loads(match_details)
     if match_details['info']['gameMode'] != "CLASSIC":
+        print("NON-CLASSIC GAME")
         return None
 
-    print(f"Match Details: {match_id} {type(match_details)}")
+    # print(f"Match Details: {match_id} {type(match_details)}")
 
     return match_details

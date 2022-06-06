@@ -12,9 +12,13 @@ class Match(models.Model):
     start_time = models.BigIntegerField(null=True)
     game_mode = models.CharField(null=True, max_length=30)
     patch = models.CharField(null=True, max_length=30)
+    insertion_date = models.DateTimeField(null=True)
 
 class Participant(models.Model):
     match_id = models.ForeignKey(Match, on_delete=models.CASCADE, default=0)
+    # NOTE Change this part_puuid to a Foriegn Key reference when player table is made.
+    part_puuid = models.CharField(null=False, max_length=200)
+    insertion_date = models.DateTimeField(null=True)
 
     # kda things
     assists = models.IntegerField(null=True)
@@ -29,11 +33,9 @@ class Participant(models.Model):
     
 
     # runes and perks
-    perks = JSONField()
+    perks = models.JSONField(null=True)
 
     # account meta data
-    puuid = models.CharField(null=True, max_length=50)
-    summoner_id = models.CharField(null=True, max_length=50)
     summoner_level = models.IntegerField(null=True)
     summoner_name = models.CharField(null=True, max_length=50)
     profile_icon = models.IntegerField(null=True)
