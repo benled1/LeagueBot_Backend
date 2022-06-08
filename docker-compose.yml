@@ -1,6 +1,15 @@
 version: "3.8"
 
 services:
+  db:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    container_name: postgres_db
   league_app:
     build: .
     volumes:
@@ -12,16 +21,6 @@ services:
     command: python league_bot/manage.py runserver 0.0.0.0:8000
     depends_on:
       - db
-
-  db:
-    image: postgres
-    volumes:
-      - ./data/db:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    container_name: postgres_db
   pgadmin:
       container_name: pgadmin4_league
       image: dpage/pgadmin4

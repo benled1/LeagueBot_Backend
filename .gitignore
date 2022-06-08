@@ -1,0 +1,6 @@
+# database volumes
+data/
+
+# env variables
+.env
+
