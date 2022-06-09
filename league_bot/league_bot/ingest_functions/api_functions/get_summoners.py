@@ -2,9 +2,12 @@ import requests
 import os
 import json
 
+from dotenv import load_dotenv
 from urllib.parse import quote
-from ratelimit import limits, sleep_and_retry
+from .rate_limiting import limit_calls
 
+
+load_dotenv()
 
 header = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
@@ -21,8 +24,7 @@ RESPONSE CODES USING IF ELSE.
 """
 
 
-@sleep_and_retry
-@limits(calls=90, period=120)
+
 def get_puuid(summoner_name):
     
     """
@@ -34,34 +36,44 @@ def get_puuid(summoner_name):
     :param summoner_name:
     :return:
     """
-    response = requests.get(
-        f"https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/{quote(summoner_name)}",
-        headers=header)
+    limit_calls()
+    print(f'Grabbing puuid for {summoner_name}...')
+    try:
+        quote_summoner = quote(summoner_name)
+    except TypeError:
+        print(summoner_name)
+        raise Exception("Error: In get_puuid(). Quote was expecting bytes and didn't get it.")
 
+    try:
+        response = requests.get(
+            f"https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/{quote_summoner}",
+            headers=header)
+    except:
+        print("Error: Failed to get puuid. Skipping...")
+        return None
 
     if response.status_code != 200:
         print(response.status_code)
-        return None
+        return response.status_code
 
     content = response.content
     summoner_dict = json.loads(content)
 
     puuid = summoner_dict['puuid']
-    # print(f"PUUID: {summoner_name} {type(puuid)}")
     return puuid
 
 
-@sleep_and_retry
-@limits(calls=90, period=120)
 def get_challenger_players():
     """
     get a list of all challenger players names in league fo legends
     :return:
     """
+    limit_calls()
     response = requests.get(
                             "https://na1.api.riotgames.com/lol/league/v4/challengerleagues/by-queue/RANKED_SOLO_5x5",
                             headers=header)
 
+    
     if response.status_code != 200:
         return None
 
@@ -73,8 +85,6 @@ def get_challenger_players():
 
     for summoner in chall_entries:
         chall_summoners.append(summoner['summonerName'])
-
-    # print(f"Challenger Players: {type(chall_summoners)}")
 
     return chall_summoners
 

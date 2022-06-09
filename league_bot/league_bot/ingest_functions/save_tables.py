@@ -62,6 +62,7 @@ def save_chall_participant_tables(puuid_list):
     match_hists = []
     for puuid in puuid_list:
         match_hists.append(get_matches.get_match_history(puuid))
+        print(type(match_hists[-1]))
 
     # flatten the 2D array
     match_hists = list(chain.from_iterable(match_hists))
@@ -81,19 +82,31 @@ def save_chall_participant_tables(puuid_list):
 def ingest_tables(amount=20):
     
     # get a list of summoner names that are in challenger
+    print("Collecting Challenger Players...")
     try:
         sum_list = get_summoners.get_challenger_players()
     except:
         raise Exception('Failed to retrieve challenger players.')
 
-    puuid_list = []
-    for summoner in sum_list[0:min(amount, len(sum_list))]:
-        puuid_list.append(get_summoners.get_puuid(summoner))
+    print("Challenger Players Collected!")
 
+    print("Finding puuids...")
+    try:
+        puuid_list = []
+        for summoner in sum_list[0:min(amount, len(sum_list))]:
+            puuid_list.append(get_summoners.get_puuid(summoner))
+    except:
+        raise Exception('Failed to retrieve player puuids.')
+    print("Puuids found!")
+
+    print("Saving Match Tables...")
     match_table = save_chall_match_tables(puuid_list)
-    # match_table.drop_duplicates(keep='first', inplace=True)
+    print("Match Tables Complete!")
 
+    print("Saving Participant Tables...")
     participant_table = save_chall_participant_tables(puuid_list)
     participant_table.drop_duplicates(subset=['summonerName', 'match_id'], keep='first', inplace=True)
+    print("Participant Tables Complete!")
+
 
     return match_table, participant_table

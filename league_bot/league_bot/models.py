@@ -7,7 +7,7 @@ class Test(models.Model):
     first_attr = models.CharField(max_length=30)
 
 class Match(models.Model):
-    match_id = models.CharField(primary_key = True, max_length=30, default=0)
+    match = models.CharField(primary_key = True, max_length=30, default=0)
     duration = models.IntegerField(null=True)
     start_time = models.BigIntegerField(null=True)
     game_mode = models.CharField(null=True, max_length=30)
@@ -15,7 +15,7 @@ class Match(models.Model):
     insertion_date = models.DateTimeField(null=True)
 
 class Participant(models.Model):
-    match_id = models.ForeignKey(Match, on_delete=models.CASCADE, default=0)
+    match = models.ForeignKey(Match, on_delete=models.CASCADE, default=0)
     # NOTE Change this part_puuid to a Foriegn Key reference when player table is made.
     part_puuid = models.CharField(null=False, max_length=200)
     insertion_date = models.DateTimeField(null=True)

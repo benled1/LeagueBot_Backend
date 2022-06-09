@@ -1,5 +1,6 @@
 import pandas as pd
 import django_subcommands
+from django.utils import timezone
 
 from django.core.management.base import BaseCommand
 from datetime import datetime
@@ -8,32 +9,34 @@ from league_bot.ingest_functions.save_tables import ingest_tables
 from league_bot.models import Match, Participant
 from django.db.utils import IntegrityError
 
+
+
 def insert_match_table(match_table_row):
     try:
         match_object_row = Match.objects.create(
             # this is the match_oid but since its index it is unnamed
-            match_id = match_table_row['match_id'],
+            match = match_table_row['match_id'],
             duration = match_table_row['duration'],
             start_time = match_table_row['start_time'],
             game_mode = match_table_row['game_mode'],
             patch = match_table_row['patch'],
-            insertion_date = datetime.now()
+            insertion_date = timezone.now()
         )
         return match_object_row
     except IntegrityError:
         pass
     
 def insert_part_table(part_table_row):
-    try:
-        match_reference = Match.objects.get(match_id=part_table_row['match_id'])
-    except:
-        raise Exception(part_table_row["match_id"])
+    # try:
+    match_reference = Match.objects.get(match=part_table_row['match_id'])
+    # except:
+    #     raise Exception(part_table_row["match_id"])
 
     try:
         part_object_row = Participant.objects.create(
 
-            insertion_date = datetime.now(),
-            match_id = match_reference,
+            insertion_date = timezone.now(),
+            match = match_reference,
             part_puuid = part_table_row['part_puuid'],
             win = part_table_row['win'],
             assists = part_table_row['assists'],
@@ -141,7 +144,7 @@ class Challengers(BaseCommand):
     help = "ingest the info on challenger players and their games"
     def handle(self, *args, **kwargs):
 
-        match_table, part_table = ingest_tables(amount=20)
+        match_table, part_table = ingest_tables(amount=1)
 
         match_dict = match_table.to_dict('records')
         for row in match_dict:
@@ -149,7 +152,6 @@ class Challengers(BaseCommand):
 
         part_dict = part_table.to_dict('records')
         for row in part_dict:
-            print(row)
             inserted_row = insert_part_table(row)
 
         pass

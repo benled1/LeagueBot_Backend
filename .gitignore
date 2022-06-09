@@ -4,3 +4,5 @@ data/
 # env variables
 .env
 
+# cache
+__pycache__/

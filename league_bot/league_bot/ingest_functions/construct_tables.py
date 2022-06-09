@@ -42,10 +42,11 @@ def get_participant_table(match_id):
 
     match_object = get_matches.get_match_details(match_id)
     if match_object is None:
-        print("Match Object is None")
+        
         return None
 
     participant_table = calc_participant_table(match_object)
+    print(f"Completed Participant Table for match_id: {match_id}")
 
     return participant_table
 
