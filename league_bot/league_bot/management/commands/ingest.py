@@ -13,8 +13,9 @@ from django.db.utils import IntegrityError
 
 def insert_match_table(match_table_row):
     try:
+        print(f"Inserting Match model {match_table_row['match_id']}...")
         match_object_row = Match.objects.create(
-            # this is the match_oid but since its index it is unnamed
+            # this is the match_id but since its index it is unnamed
             match = match_table_row['match_id'],
             duration = match_table_row['duration'],
             start_time = match_table_row['start_time'],
@@ -24,15 +25,17 @@ def insert_match_table(match_table_row):
         )
         return match_object_row
     except IntegrityError:
-        pass
+        return "Failed"
     
 def insert_part_table(part_table_row):
-    # try:
-    match_reference = Match.objects.get(match=part_table_row['match_id'])
-    # except:
-    #     raise Exception(part_table_row["match_id"])
+    try:
+        match_reference = Match.objects.get(match=part_table_row['match_id'])
+    except:
+        print(f"Failed to match the part_row to a match in the match table: {part_table_row['match_id']}")
+        return "Failed"
 
     try:
+        print(f"Inserting Participant model {part_table_row['summonerName']}")
         part_object_row = Participant.objects.create(
 
             insertion_date = timezone.now(),
@@ -144,11 +147,12 @@ class Challengers(BaseCommand):
     help = "ingest the info on challenger players and their games"
     def handle(self, *args, **kwargs):
 
-        match_table, part_table = ingest_tables(amount=1)
+        match_table, part_table = ingest_tables(amount=100)
 
         match_dict = match_table.to_dict('records')
         for row in match_dict:
             inserted_row = insert_match_table(row)
+
 
         part_dict = part_table.to_dict('records')
         for row in part_dict:

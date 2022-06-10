@@ -12,23 +12,15 @@ class GetPuuidFailed(Exception):
     pass
 
 
-def get_match_table(puuid):
+def get_match_table(match_hist_ids):
     """
     Return a match_table for the entries in the players match history
     :param summoner_name: the name of a single summoner
     :return: pandas df representing the match table
     """
 
-    if puuid is None:
-        raise GetPuuidFailed
-
-    match_hist_ids = get_matches.get_match_history(puuid=puuid, length=20)
-    if match_hist_ids is None:
-        return None
-
     match_table = calc_match_table(match_hist_ids)
-    print(f"Completed Match Table for puuid: {puuid}")
-
+    
     return match_table
 
 

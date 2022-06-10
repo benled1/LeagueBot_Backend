@@ -28,7 +28,7 @@ etc....
 """
 
 
-def save_chall_match_tables(puuid_list):
+def save_chall_match_tables(all_match_hists):
     """
     Save tables for "amount" number of challenger players.
     :param amount: an integer representing the number of players that will be looped over.
@@ -38,9 +38,8 @@ def save_chall_match_tables(puuid_list):
     """
     # initial pandas row
     match_table = pd.DataFrame()
-
-    for puuid in puuid_list:
-        match_table = pd.concat([match_table, construct_tables.get_match_table(puuid)])
+    for match_hist_ids in all_match_hists:
+        match_table = pd.concat([match_table, construct_tables.get_match_table(match_hist_ids)])
         if match_table is None:
             continue
 
@@ -50,7 +49,7 @@ def save_chall_match_tables(puuid_list):
     return match_table
 
 
-def save_chall_participant_tables(puuid_list):
+def save_chall_participant_tables(all_match_hists):
     """
     Save tables for "amount" number of challenger players.
     :param amount: an integer representing the number of players that will be looped over.
@@ -59,13 +58,10 @@ def save_chall_participant_tables(puuid_list):
             Each row in the participant table will contain info about the stats of a specific player in a specific
             match.
     """
-    match_hists = []
-    for puuid in puuid_list:
-        match_hists.append(get_matches.get_match_history(puuid))
-        print(type(match_hists[-1]))
+
 
     # flatten the 2D array
-    match_hists = list(chain.from_iterable(match_hists))
+    match_hists = list(chain.from_iterable(all_match_hists))
 
     # initial pandas df
     participant_table = pd.DataFrame()
@@ -79,9 +75,7 @@ def save_chall_participant_tables(puuid_list):
 
     return participant_table
 
-def ingest_tables(amount=20):
-    
-    # get a list of summoner names that are in challenger
+def pre_process(amount):
     print("Collecting Challenger Players...")
     try:
         sum_list = get_summoners.get_challenger_players()
@@ -99,12 +93,30 @@ def ingest_tables(amount=20):
         raise Exception('Failed to retrieve player puuids.')
     print("Puuids found!")
 
+    all_match_hists = []
+    for puuid in puuid_list:
+        match_hist_ids = get_matches.get_match_history(puuid=puuid, length=20)
+        if match_hist_ids is None:
+            continue
+        all_match_hists.append(match_hist_ids)
+        
+    
+    return all_match_hists, puuid_list
+
+
+
+
+def ingest_tables(amount=20):
+    
+    all_match_hists, puuid_list = pre_process(amount)
+    
+
     print("Saving Match Tables...")
-    match_table = save_chall_match_tables(puuid_list)
+    match_table = save_chall_match_tables(all_match_hists)
     print("Match Tables Complete!")
 
     print("Saving Participant Tables...")
-    participant_table = save_chall_participant_tables(puuid_list)
+    participant_table = save_chall_participant_tables(all_match_hists)
     participant_table.drop_duplicates(subset=['summonerName', 'match_id'], keep='first', inplace=True)
     print("Participant Tables Complete!")
 
