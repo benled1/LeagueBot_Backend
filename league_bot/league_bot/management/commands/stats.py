@@ -6,6 +6,7 @@ from league_bot.models import Test
 from league_bot.ingest_functions.save_tables import ingest_tables
 from django.db.utils import IntegrityError
 from league_bot.models import Match, Participant
+from league_bot.stat_functions import champ_group
 
 def find_champ_winrate(part_table):
     part_table['win'] = part_table['win'].astype(int)
@@ -24,12 +25,7 @@ class Test(BaseCommand):
     help = "ingest the info on challenger players and their games"
     def handle(self, *args, **kwargs):
 
-        match_df = pd.DataFrame(list(Match.objects.all().values()))
-        part_df = pd.DataFrame(list(Participant.objects.all().values()))
-        
-
-        champ_winrates = find_champ_winrate(part_table=part_df)
-        print(champ_winrates)
+        champ_group.champ_winrate()
         pass
 
 class Command(django_subcommands.SubCommands):

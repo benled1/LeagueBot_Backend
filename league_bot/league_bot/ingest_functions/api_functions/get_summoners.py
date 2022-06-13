@@ -53,6 +53,7 @@ def get_puuid(summoner_name):
         return None
 
     if response.status_code != 200:
+        raise Exception(f'Error: Request returned code {response.status_code}')
         print(response.status_code)
         return response.status_code
 
@@ -75,6 +76,7 @@ def get_challenger_players():
 
     
     if response.status_code != 200:
+        raise Exception(f'Error: Request returned code {response.status_code}')
         return None
 
     chall_response = response.content

@@ -43,6 +43,7 @@ def get_match_history(puuid, length=20):
         return None
 
     if response.status_code != 200:
+        raise Exception(f'Error: Request returned code {response.status_code}')
         print(f'Error: Request returned code {response.status_code}')
         return None
 
@@ -74,6 +75,7 @@ def get_match_details(match_id):
         return None
 
     if response.status_code != 200:
+        raise Exception(f'Error: Request returned code {response.status_code}')
         print(f'Error: Request returned code {response.status_code}')
         return None
 
