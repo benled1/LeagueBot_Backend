@@ -3,8 +3,6 @@ from tkinter.tix import INTEGER
 from django.db import models
 from django.forms import CharField, IntegerField, JSONField
 
-class Test(models.Model):
-    first_attr = models.CharField(max_length=30)
 
 class Match(models.Model):
     match = models.CharField(primary_key = True, max_length=30, default=0)
@@ -13,6 +11,12 @@ class Match(models.Model):
     game_mode = models.CharField(null=True, max_length=30)
     patch = models.CharField(null=True, max_length=30)
     insertion_date = models.DateTimeField(null=True)
+
+
+class Champion(models.Model):
+    champ_name = models.CharField(primary_key=True, max_length=50, default="Default name")
+    champ_play_count = models.IntegerField(null=True, default=-1)
+    champ_winrate = models.FloatField(null=True, default=-1)
 
 class Participant(models.Model):
     match = models.ForeignKey(Match, on_delete=models.CASCADE, default=0)
@@ -151,6 +155,7 @@ class Participant(models.Model):
     item4 = models.IntegerField(null=True)
     item5 = models.IntegerField(null=True)
     items_purchased = models.IntegerField(null=True)
+
 
 
 

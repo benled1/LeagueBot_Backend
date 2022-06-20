@@ -1,7 +1,9 @@
 import pandas as pd
+import warnings
 
 
 from .api_functions import get_summoners, get_matches
+from .api_functions.exceptions import BadResponseGetMatchDetails, InvalidMatchType
 
 """
 A module which takes a summoner object as input and constructs all the tables corresponding to that summoner
@@ -31,11 +33,12 @@ def get_participant_table(match_id):
     :param match_id: the match id of the match that the participant table refers to.
     :return: pandas df representing the participant table
     """
-
-    match_object = get_matches.get_match_details(match_id)
-    if match_object is None:
-        
-        return None
+    try:
+        match_object = get_matches.get_match_details(match_id)
+    except BadResponseGetMatchDetails as exc:
+        raise exc
+    except InvalidMatchType as exc:
+        raise exc
 
     participant_table = calc_participant_table(match_object)
     print(f"Completed Participant Table for match_id: {match_id}")
@@ -55,14 +58,19 @@ def calc_match_table(match_hist_ids):
     match_table = pd.DataFrame(columns=["duration", "start_time", "game_mode", "patch"])
     
     for match_id in match_hist_ids:
-        match_object = get_matches.get_match_details(match_id=match_id)
-        if match_object is None:
+        try:
+            match_object = get_matches.get_match_details(match_id=match_id)
+        except BadResponseGetMatchDetails as exc:
+            warnings.warn(f"Failed to get match details for {exc.match_id} with code: {exc.status_code}")
+            continue
+        except InvalidMatchType as exc:
+            warnings.warn(f"Invalid match type {exc.match_type}, skipping...")
             continue
         row_values = {"match_id": match_object["metadata"]['matchId'],
-                      "duration": match_object['info']['gameDuration'],
-                      "start_time": match_object['info']['gameStartTimestamp'],
-                      "game_mode": match_object['info']['gameMode'],
-                      "patch": match_object['info']['gameVersion'][:4]}
+                    "duration": match_object['info']['gameDuration'],
+                    "start_time": match_object['info']['gameStartTimestamp'],
+                    "game_mode": match_object['info']['gameMode'],
+                    "patch": match_object['info']['gameVersion'][:4]}
         match_row = pd.Series(row_values, name=match_object['metadata']['matchId'])
         match_table = match_table.append(match_row)
 

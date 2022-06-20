@@ -4,7 +4,6 @@ from django.utils import timezone
 
 from django.core.management.base import BaseCommand
 from datetime import datetime
-from league_bot.models import Test
 from league_bot.ingest_functions.save_tables import ingest_tables
 from league_bot.models import Match, Participant
 from django.db.utils import IntegrityError
@@ -147,20 +146,16 @@ class Challengers(BaseCommand):
     help = "ingest the info on challenger players and their games"
     def handle(self, *args, **kwargs):
 
-        match_table, part_table = ingest_tables(amount=100)
+        match_table, part_table = ingest_tables(amount=3)
 
         match_dict = match_table.to_dict('records')
         for row in match_dict:
-            inserted_row = insert_match_table(row)
-
+            insert_match_table(row)
 
         part_dict = part_table.to_dict('records')
         for row in part_dict:
-            inserted_row = insert_part_table(row)
+            insert_part_table(row)
 
-        pass
-
-    
 
 class Command(django_subcommands.SubCommands):
     subcommands = {"challengers": Challengers}

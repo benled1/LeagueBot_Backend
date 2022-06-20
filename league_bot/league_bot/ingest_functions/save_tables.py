@@ -2,30 +2,9 @@ import pandas as pd
 
 from . import construct_tables
 from .api_functions import get_summoners, get_matches
+from .api_functions import exceptions
 from itertools import chain
-
-##### THIS IS HOW WE WILL SEND ERRORS THROOUGH THE FUCNTIONS
-# PUT ALL THE FUNCTIONS IN THE DIAGRAM INSIDE TRY EXCEPT STATEMENTS AND HAVE A FAILED VARIABLE 
-# ONLY RUN THE FUNCTIONS THAT ARE RELIANT ON THE CURRENT FUNCTION IF THE FIALED REMAINS FALSE
-# TURN THE FAIL TO TRUE IF CURRENT FUNCTION FAILS
-# THIS WILL SKIP TO END OF THIS SINGLE MATCH AND THEREFORE MOVING TO NEXT ONE
-"""
-EX of the above is
-
-try:
-    func1()
-except:
-    Failed = True
-
-if Failed != True
-    try:
-        func2()
-    except:
-        Failed = True
-
-etc....
-
-"""
+import warnings
 
 
 def save_chall_match_tables(all_match_hists):
@@ -59,7 +38,6 @@ def save_chall_participant_tables(all_match_hists):
             match.
     """
 
-
     # flatten the 2D array
     match_hists = list(chain.from_iterable(all_match_hists))
 
@@ -68,10 +46,15 @@ def save_chall_participant_tables(all_match_hists):
 
     # loop through match_ids and add all the participants from each match as a row in the participant table
     for match_id in match_hists:
-        participant_table = pd.concat([participant_table, construct_tables.get_participant_table(match_id)])
-        # participant_table.drop_duplicates(keep='first', inplace=True)
-        if participant_table is None:
-            return None
+        try:
+            part_table = construct_tables.get_participant_table(match_id)
+        except exceptions.BadResponseGetMatchDetails as exc:
+            warnings.warn(f"Failed to get match details for {exc.match_id} with code {exc.status_code}")
+            continue
+        except exceptions.InvalidMatchType as exc:
+            warnings.warn(f"Invalid match type {exc.match_type}, skipping...")
+            continue
+        participant_table = pd.concat([participant_table, part_table])
 
     return participant_table
 
@@ -79,38 +62,42 @@ def pre_process(amount):
     print("Collecting Challenger Players...")
     try:
         sum_list = get_summoners.get_challenger_players()
-    except:
-        raise Exception('Failed to retrieve challenger players.')
-
+    except exceptions.BadResponseGetChallengers as exc:
+        raise exceptions.BadResponseGetChallengers(f"Returned code: {exc.status_code}")
     print("Challenger Players Collected!")
 
     print("Finding puuids...")
-    try:
-        puuid_list = []
-        for summoner in sum_list[0:min(amount, len(sum_list))]:
+    puuid_list = []
+    for summoner in sum_list[0:min(amount, len(sum_list))]:
+        try:
             puuid_list.append(get_summoners.get_puuid(summoner))
-    except:
-        raise Exception('Failed to retrieve player puuids.')
+        except exceptions.BadResponseGetPuuid as exc:
+            warnings.warn(f"Failed to get puuid for {exc.player_name} with code: {exc.status_code}")
+            continue
+        except exceptions.PlayerQuoteFailed as exc:
+            warnings.warn(f"Failed to quote {exc.summoner_name}")
+            continue
+
     print("Puuids found!")
 
     all_match_hists = []
     for puuid in puuid_list:
-        match_hist_ids = get_matches.get_match_history(puuid=puuid, length=20)
-        if match_hist_ids is None:
+        try:
+            match_hist_ids = get_matches.get_match_history(puuid=puuid, length=20)
+        except exceptions.BadResponseGetMatchHistory as exc:
+            warnings.warn(f"Failed to get match history for {exc.puuid} with code: {exc.status_code}")
+            continue
+        except exceptions.PuuidQuoteFailed as exc:
+            warnings.warn(f"Failed to quote {exc.puuid}")
             continue
         all_match_hists.append(match_hist_ids)
-        
-    
-    return all_match_hists, puuid_list
 
-
-
+    return all_match_hists
 
 def ingest_tables(amount=20):
     
-    all_match_hists, puuid_list = pre_process(amount)
+    all_match_hists = pre_process(amount)
     
-
     print("Saving Match Tables...")
     match_table = save_chall_match_tables(all_match_hists)
     print("Match Tables Complete!")
