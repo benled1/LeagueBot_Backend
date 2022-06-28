@@ -28,7 +28,7 @@ def get_champion_stat_card(champ_row):
     stat_card = Image.open("league_bot/final_images/backdrop/league_backdrop.jpeg")
     draw = ImageDraw.Draw(stat_card)
     number_font = ImageFont.truetype("league_bot/fonts/Friz_Quadrata_Regular.ttf", 30)
-    label_font = ImageFont.truetype("league_bot/fonts/Friz_Quadrata_Bold.otf", 11)
+    label_font = ImageFont.truetype("league_bot/fonts/Friz_Quadrata_Bold.otf", 12)
     draw.text((20, 20),f"{champ_winrate}%",(115,91, 48),font=number_font)
     draw.text((35, 50),f"WINRATE",(115,91, 48),font=label_font)
 
