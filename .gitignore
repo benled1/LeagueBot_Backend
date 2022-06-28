@@ -9,3 +9,6 @@ __pycache__/
 
 # garbage files
 .DS_Store
+
+# dragontail
+dragontail-12.6.1/

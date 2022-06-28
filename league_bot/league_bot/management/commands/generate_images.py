@@ -1,12 +1,15 @@
 from ctypes import wintypes
 from typing import final
 from numpy import number
-from PIL import Image
 from io import BytesIO
 import pandas as pd
 import django_subcommands
 import requests
 import os
+
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageFont
 
 from league_bot.models import Participant
 from django.core.management.base import BaseCommand
@@ -19,14 +22,30 @@ def get_champion_picture(champ_name):
         champ_img = Image.open(BytesIO(response.content))
         return champ_img
 
+def get_champion_stat_card(champ_row):
+    champ_winrate = champ_row['champ_winrate'] * 100
+
+    stat_card = Image.open("league_bot/final_images/backdrop/league_backdrop.jpeg")
+    draw = ImageDraw.Draw(stat_card)
+    number_font = ImageFont.truetype("league_bot/fonts/Friz_Quadrata_Regular.ttf", 30)
+    label_font = ImageFont.truetype("league_bot/fonts/Friz_Quadrata_Bold.otf", 11)
+    draw.text((20, 20),f"{champ_winrate}%",(115,91, 48),font=number_font)
+    draw.text((35, 50),f"WINRATE",(115,91, 48),font=label_font)
+
+
+
+
+    stat_card.save("league_bot/final_images/test.png", "PNG")
+    return stat_card
+
 
 class ChampionStats(BaseCommand):
     def handle(self, *args, **kwargs):
-        backdrop = Image.open("league_bot/final_images/backdrop/league_backdrop.jpeg")
-        champ_img = get_champion_picture("Annie")
-        backdrop.paste(champ_img)
-        backdrop.save("league_bot/final_images/test.png", "PNG")
-        pass
+        all_champ_rows = Champion.objects.values()
+        # for champ_row in all_champ_rows:
+        champ_row = all_champ_rows[2]
+        champ_card = get_champion_stat_card(champ_row=champ_row)
+        
         
 class Champions(BaseCommand):
     """

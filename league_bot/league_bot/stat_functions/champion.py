@@ -5,7 +5,7 @@ def get_winrate(all_champ_part_records):
     if number_of_records == 0:
         return -1
     else:
-        winrate = round((number_of_wins/number_of_records), 2)
+        winrate = round((number_of_wins/number_of_records), 4)
         return winrate
 
 def get_play_count(all_champ_part_records):
