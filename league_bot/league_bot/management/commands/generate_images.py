@@ -23,29 +23,34 @@ def get_champion_picture(champ_name):
         return champ_img
 
 def get_champion_stat_card(champ_row):
-    champ_winrate = champ_row['champ_winrate'] * 100
+    champ_winrate = round(champ_row['champ_winrate'] * 100, 2)
+    champ_play_count = champ_row['champ_play_count']
 
     stat_card = Image.open("league_bot/final_images/backdrop/league_backdrop.jpeg")
+    print(stat_card.size)
     draw = ImageDraw.Draw(stat_card)
     number_font = ImageFont.truetype("league_bot/fonts/Friz_Quadrata_Regular.ttf", 30)
     label_font = ImageFont.truetype("league_bot/fonts/Friz_Quadrata_Bold.otf", 12)
+    # Draw winrate text and number
     draw.text((20, 20),f"{champ_winrate}%",(115,91, 48),font=number_font)
-    draw.text((35, 50),f"WINRATE",(115,91, 48),font=label_font)
+    draw.text((20, 55),f"WINRATE",(115,91, 48),font=label_font)
+
+    # Draw in champ_playcount and text
+    draw.text((20, 100),f"{champ_play_count}",(115,91, 48),font=number_font)
+    draw.text((20, 135),f"MATCHES",(115,91, 48),font=label_font)
 
 
 
-
-    stat_card.save("league_bot/final_images/test.png", "PNG")
+    
     return stat_card
 
 
 class ChampionStats(BaseCommand):
     def handle(self, *args, **kwargs):
         all_champ_rows = Champion.objects.values()
-        # for champ_row in all_champ_rows:
-        champ_row = all_champ_rows[2]
-        champ_card = get_champion_stat_card(champ_row=champ_row)
-        
+        for champ_row in all_champ_rows:
+            champ_card = get_champion_stat_card(champ_row=champ_row)
+            champ_card.save(f"league_bot/final_images/champ_stat_cards/{champ_row['champ_name']}.png", "PNG")    
         
 class Champions(BaseCommand):
     """

@@ -1,3 +1,5 @@
+import base64
+import json
 from wsgiref.validate import PartialIteratorWrapper
 from league_bot.models import Participant
 from ninja import NinjaAPI
@@ -13,9 +15,13 @@ def add(request, a: int, b:int):
 
 @api.get("/champion_stats")
 def champion_stats(request, champ_name: str):
-    champion_row = Champion.objects.filter(champ_name=champ_name)
-    champion_row_json = serializers.serialize('json', champion_row)
-    return champion_row_json
+    # champion_row = Champion.objects.filter(champ_name=champ_name)
+    with open(f'/Users/benledingham/Documents/League Bot/League_App/league_bot/league_bot/final_images/champ_stat_cards/Annie.png', 'rb') as imageFile:
+        encoded_champ_img = base64.b64encode(imageFile.read()).decode('utf-8')
+    json_img = json.dumps([{'image': encoded_champ_img}])
+    # champion_row_json = serializers.serialize('json', champion_row)
+    return json_img
+
 
 
 
