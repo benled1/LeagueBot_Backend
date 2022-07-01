@@ -49,6 +49,7 @@ class ChampionStats(BaseCommand):
         s3_resource = boto3.resource('s3')
         first_bucket = s3_resource.Bucket(name="league-bot-images")
         first_object = s3_resource.Object(bucket_name="league-bot-images", key="league_bot/final_images/champ_stat_cards/Ahri.png")
+        first_object.upload_file("league_bot/final_images/champ_stat_cards/Ahri.png")
         print(first_object)
         for champ_row in all_champ_rows:
             champ_card = get_champion_stat_card(champ_row=champ_row)
