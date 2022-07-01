@@ -6,6 +6,7 @@ import pandas as pd
 import django_subcommands
 import requests
 import os
+import boto3
 
 from PIL import Image
 from PIL import ImageDraw
@@ -39,18 +40,20 @@ def get_champion_stat_card(champ_row):
     draw.text((20, 100),f"{champ_play_count}",(115,91, 48),font=number_font)
     draw.text((20, 135),f"MATCHES",(115,91, 48),font=label_font)
 
-
-
-    
     return stat_card
 
 
 class ChampionStats(BaseCommand):
     def handle(self, *args, **kwargs):
         all_champ_rows = Champion.objects.values()
+        s3_resource = boto3.resource('s3')
+        first_bucket = s3_resource.Bucket(name="league-bot-images")
+        first_object = s3_resource.Object(bucket_name="league-bot-images", key="league_bot/final_images/champ_stat_cards/Ahri.png")
+        print(first_object)
         for champ_row in all_champ_rows:
             champ_card = get_champion_stat_card(champ_row=champ_row)
-            champ_card.save(f"league_bot/final_images/champ_stat_cards/{champ_row['champ_name']}.png", "PNG")    
+            champ_card.save(f"league_bot/final_images/champ_stat_cards/{champ_row['champ_name']}.png", "PNG")
+
         
 class Champions(BaseCommand):
     """
