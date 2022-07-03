@@ -28,7 +28,7 @@ def get_champion_stat_card(champ_row):
     champ_play_count = champ_row['champ_play_count']
 
     stat_card = Image.open("league_bot/final_images/backdrop/league_backdrop.jpeg")
-    print(stat_card.size)
+
     draw = ImageDraw.Draw(stat_card)
     number_font = ImageFont.truetype("league_bot/fonts/Friz_Quadrata_Regular.ttf", 30)
     label_font = ImageFont.truetype("league_bot/fonts/Friz_Quadrata_Bold.otf", 12)
@@ -47,14 +47,14 @@ class ChampionStats(BaseCommand):
     def handle(self, *args, **kwargs):
         all_champ_rows = Champion.objects.values()
         s3_resource = boto3.resource('s3')
-        first_bucket = s3_resource.Bucket(name="league-bot-images")
-        first_object = s3_resource.Object(bucket_name="league-bot-images", key="league_bot/final_images/champ_stat_cards/Ahri.png")
-        first_object.upload_file("league_bot/final_images/champ_stat_cards/Ahri.png")
-        print(first_object)
         for champ_row in all_champ_rows:
-            champ_card = get_champion_stat_card(champ_row=champ_row)
-            champ_card.save(f"league_bot/final_images/champ_stat_cards/{champ_row['champ_name']}.png", "PNG")
+            print(f"Uploading {champ_row['champ_name']}...")
+            # champ_card = get_champion_stat_card(champ_row=champ_row)
+            first_object = s3_resource.Object(bucket_name="league-bot-images", key=f"champ_stat_pages/{champ_row['champ_name']}/{champ_row['champ_name']}.png")
+            first_object.upload_file(f"league_bot/final_images/champ_stat_cards/{champ_row['champ_name']}.png")
 
+            # champ_card.save(f"league_bot/final_images/champ_stat_cards/{champ_row['champ_name']}.png", "PNG")
+           
         
 class Champions(BaseCommand):
     """
