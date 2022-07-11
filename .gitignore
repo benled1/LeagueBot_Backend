@@ -12,3 +12,6 @@ __pycache__/
 
 # dragontail
 dragontail-12.6.1/
+
+# tmp images
+tmp_images/
