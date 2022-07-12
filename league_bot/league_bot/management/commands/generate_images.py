@@ -7,7 +7,8 @@ import django_subcommands
 import requests
 import os
 import boto3
-
+from datetime import datetime as dt
+import datetime
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
@@ -37,13 +38,15 @@ class UploadChampionPictures(BaseCommand):
 
 class UploadChampionStatCards(BaseCommand):
     def handle(self, *args, **kwargs):
+        todays_date = dt.now(datetime.timezone.utc).strftime(r"%m-%d-%Y")
         all_champ_rows = Champion.objects.values()
         s3_resource = boto3.resource('s3')
         for champ_row in all_champ_rows:
             champ_name = get_champion_stat_card(champ_row=champ_row)
 
             print(f"Uploading {champ_name}...")
-            first_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"champ_stat_cards/{champ_name}/{champ_name}.png")
+            print(todays_date)
+            first_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"champ_stat_cards/{champ_name}/{champ_name}{todays_date}.png")
             first_object.upload_file(f"league_bot/tmp_images/champ_stat_cards/{champ_name}.png")
 
            
