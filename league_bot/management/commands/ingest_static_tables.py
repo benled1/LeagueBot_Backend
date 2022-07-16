@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand
 from league_bot.ingest_functions.save_tables import ingest_tables
 from django.db.utils import IntegrityError
 from league_bot.models import Match, Participant, Champion
-from league_bot.stat_functions import champ_group
+# from league_bot.stat_functions import champ_group
 
 
 def get_champ_dict():
