@@ -1,5 +1,4 @@
 from numbers import Integral
-from tkinter.tix import INTEGER
 from django.db import models
 from django.forms import CharField, IntegerField, JSONField
 
