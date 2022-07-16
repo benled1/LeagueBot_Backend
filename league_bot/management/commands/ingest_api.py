@@ -146,7 +146,7 @@ class Challengers(BaseCommand):
     help = "ingest the info on challenger players and their games"
     def handle(self, *args, **kwargs):
 
-        match_table, part_table = ingest_tables(amount=100)
+        match_table, part_table = ingest_tables(amount=10)
 
         match_dict = match_table.to_dict('records')
         for row in match_dict:
