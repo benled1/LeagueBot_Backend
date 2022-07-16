@@ -20,5 +20,5 @@ from league_bot.api import api
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('api/', api.urls)
+    path(r'^$', api.urls)
 ]
