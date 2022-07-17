@@ -25,7 +25,7 @@ from league_bot.stat_functions.champion import get_winrate, get_play_count
 class UploadChampionPictures(BaseCommand):
     def handle(self, *args, **kwargs):
         if not os.path.isdir("league_bot/tmp_images/champ_stat_cards"):
-            path = os.path.join("app/league_bot", "tmp_images")
+            path = os.path.join("/app/league_bot", "tmp_images")
             os.mkdir(path)
             path = os.path.join(path, "champ_pics")
             os.mkdir(path)
@@ -45,7 +45,7 @@ class UploadChampionStatCards(BaseCommand):
     def handle(self, *args, **kwargs):
 
         if not os.path.isdir("league_bot/tmp_images/champ_stat_cards"):
-            path = os.path.join("app/league_bot", "tmp_images")
+            path = os.path.join("/app/league_bot", "tmp_images")
             os.mkdir(path)
             path = os.path.join(path, "champ_stat_cards")
             os.mkdir(path)
