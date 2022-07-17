@@ -24,8 +24,11 @@ from league_bot.stat_functions.champion import get_winrate, get_play_count
 
 class UploadChampionPictures(BaseCommand):
     def handle(self, *args, **kwargs):
-        if not os.path.isdir("league_bot/tmp_images/champ_pics"):
-            os.mkdir("app/league_bot/tmp_images/champ_pics")
+        if not os.path.isdir("league_bot/tmp_images/champ_stat_cards"):
+            path = os.path.join("app/league_bot", "tmp_images")
+            os.mkdir(path)
+            path = os.path.join(path, "champ_pics")
+            os.mkdir(path)
 
 
         all_champ_rows = Champion.objects.values()
@@ -42,7 +45,10 @@ class UploadChampionStatCards(BaseCommand):
     def handle(self, *args, **kwargs):
 
         if not os.path.isdir("league_bot/tmp_images/champ_stat_cards"):
-            os.mkdir("app/league_bot/tmp_images/champ_stat_cards")
+            path = os.path.join("app/league_bot", "tmp_images")
+            os.mkdir(path)
+            path = os.path.join(path, "champ_stat_cards")
+            os.mkdir(path)
 
         todays_date = dt.now(datetime.timezone.utc).strftime(r"%m-%d-%Y")
         all_champ_rows = Champion.objects.values()
