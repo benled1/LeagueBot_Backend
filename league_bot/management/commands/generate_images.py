@@ -24,6 +24,10 @@ from league_bot.stat_functions.champion import get_winrate, get_play_count
 
 class UploadChampionPictures(BaseCommand):
     def handle(self, *args, **kwargs):
+        if not os.path.isdir("league_bot/tmp_images/champ_pics"):
+            os.mkdir("league_bot/tmp_images/champ_pics")
+
+
         all_champ_rows = Champion.objects.values()
         s3_resource = boto3.resource('s3')
         for champ_row in all_champ_rows:
@@ -32,12 +36,14 @@ class UploadChampionPictures(BaseCommand):
             print(f"Uploading {champ_name}...")
             first_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"champ_pics/{champ_name}/{champ_name}.png")
             first_object.upload_file(f"league_bot/tmp_images/champ_pics/{champ_name}.png")
-        
-        pass
 
 
 class UploadChampionStatCards(BaseCommand):
     def handle(self, *args, **kwargs):
+
+        if not os.path.isdir("league_bot/tmp_images/champ_stat_cards"):
+            os.mkdir("league_bot/tmp_images/champ_stat_cards")
+
         todays_date = dt.now(datetime.timezone.utc).strftime(r"%m-%d-%Y")
         all_champ_rows = Champion.objects.values()
         s3_resource = boto3.resource('s3')
@@ -49,8 +55,7 @@ class UploadChampionStatCards(BaseCommand):
             first_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"champ_stat_cards/{champ_name}/{champ_name}{todays_date}.png")
             first_object.upload_file(f"league_bot/tmp_images/champ_stat_cards/{champ_name}.png")
 
-           
-        
+                
 class Champions(BaseCommand):
     """
     Create entries for a number of challenger players taken from the challenger api call.
