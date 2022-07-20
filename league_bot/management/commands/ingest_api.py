@@ -144,9 +144,13 @@ class Challengers(BaseCommand):
     This creates entries in the match table, participants table and summoners table.
     """
     help = "ingest the info on challenger players and their games"
-    def handle(self, *args, **kwargs):
+    def add_arguments(self, parser) -> None:
+        parser.add_argument('nplayers', type=int, help='Indicates the number of players which will be ingested.')
+        return super().add_arguments(parser)
 
-        match_table, part_table = ingest_tables(amount=10)
+    def handle(self, *args, **kwargs):
+        n_players = kwargs['nplayers']
+        match_table, part_table = ingest_tables(amount=n_players)
 
         match_dict = match_table.to_dict('records')
         for row in match_dict:

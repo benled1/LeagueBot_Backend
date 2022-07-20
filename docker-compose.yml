@@ -19,7 +19,7 @@ services:
     image: league_app:latest
     container_name: league_app_container
     # command: pip install -r requirements.txt
-    command: python league_bot/manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:8000
     depends_on:
       - db
   pgadmin:
