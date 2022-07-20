@@ -3,9 +3,11 @@ boto3==1.24.22
 botocore==1.27.22
 certifi==2022.5.18.1
 charset-normalizer==2.0.12
+dj-database-url==0.5.0
 Django==4.0.3
 django-ninja==0.18.0
 django-subcommands==2020.12.3
+gunicorn==20.1.0
 idna==3.3
 jmespath==1.0.1
 numpy==1.22.4
@@ -23,3 +25,4 @@ six==1.16.0
 sqlparse==0.4.2
 typing_extensions==4.2.0
 urllib3==1.26.9
+whitenoise==6.2.0
