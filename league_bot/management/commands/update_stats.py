@@ -13,7 +13,8 @@ from league_bot.stat_functions.champion import get_winrate, get_play_count, get_
 
 def create_build_entry(input_df):
     for index, row in input_df.iterrows():
-        Builds.objects.create(
+        Builds.objects.update_or_create(
+            build_id = row['build_id'],
             champ_name = Champion.objects.get(champ_name = row['champ_name']),
             item0 = row['item0'],
             item1 = row['item1'],
@@ -23,8 +24,6 @@ def create_build_entry(input_df):
             item5 = row['item5'],
             win_rate = row['win_rate']
         )
-           
-
 
 
 class Test(BaseCommand):
@@ -34,11 +33,10 @@ class Test(BaseCommand):
     """
     help = "ingest the info on challenger players and their games"
     def handle(self, *args, **kwargs):
-        champion_records =Champion.objects.values()
-        for champion in champion_records:
-            get_best_builds(champion_name=champion['champ_name'])
-        pass
+        Builds.objects.all().delete()
+        result = get_best_builds('Annie')
 
+        pass
 
 
 class ChampionStats(BaseCommand):
