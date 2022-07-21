@@ -17,6 +17,18 @@ class Champion(models.Model):
     champ_play_count = models.IntegerField(null=True, default=-1)
     champ_winrate = models.FloatField(null=True, default=-1)
 
+
+class Builds(models.Model):
+    champ_name = models.ForeignKey(Champion, on_delete=models.CASCADE, default="Default name")
+    item0 = models.IntegerField(null=True, default=1)
+    item1 = models.IntegerField(null=True, default=1)
+    item2 = models.IntegerField(null=True, default=1)
+    item3 = models.IntegerField(null=True, default=1)
+    item4 = models.IntegerField(null=True, default=1)
+    item5 = models.IntegerField(null=True, default=1)
+    win_rate = models.FloatField(null=True, default=1)
+
+
 class Participant(models.Model):
     match = models.ForeignKey(Match, on_delete=models.CASCADE, default=0)
     # NOTE Change this part_puuid to a Foriegn Key reference when player table is made.
@@ -34,7 +46,6 @@ class Participant(models.Model):
     total_time_spent_dead = models.IntegerField(null=True)
     triple_kills = models.IntegerField(null=True)
     
-
     # runes and perks
     perks = models.JSONField(null=True)
 
@@ -154,6 +165,19 @@ class Participant(models.Model):
     item4 = models.IntegerField(null=True)
     item5 = models.IntegerField(null=True)
     items_purchased = models.IntegerField(null=True)
+
+    # item build
+    @property
+    def item_build(self):
+        item_build  = {
+            'item0': self.item0,
+            'item1': self.item1,
+            'item2': self.item2,
+            'item3': self.item3,
+            'item4': self.item4,
+            'item5': self.item5,
+        }
+        return item_build
 
 
 
