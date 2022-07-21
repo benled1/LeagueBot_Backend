@@ -19,6 +19,7 @@ class Champion(models.Model):
 
 
 class Builds(models.Model):
+    build_id = models.CharField(primary_key=True, max_length=50, default=0)
     champ_name = models.ForeignKey(Champion, on_delete=models.CASCADE, default="Default name")
     item0 = models.IntegerField(null=True, default=1)
     item1 = models.IntegerField(null=True, default=1)

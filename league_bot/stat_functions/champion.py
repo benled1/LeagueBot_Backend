@@ -46,6 +46,13 @@ def get_best_builds(champion_name):
                                 'build_count_y': 'num_wins'}, inplace=True)
         build_df.fillna(value=0.0, inplace=True)
         build_df['win_rate'] = build_df['num_wins']/build_df['num_plays']
+        build_df['build_id'] = build_df['item0'].astype(str) + \
+                            build_df['item1'].astype(str) + \
+                            build_df['item2'].astype(str) + \
+                            build_df['item3'].astype(str) + \
+                            build_df['item4'].astype(str) + \
+                            build_df['item5'].astype(str)
+                                
         build_df.sort_values(by='win_rate', ascending=False, inplace=True)
     else:
         return "No Builds"
