@@ -3,6 +3,7 @@ from typing import final
 from numpy import number
 from io import BytesIO
 import pandas as pd
+import json
 import django_subcommands
 import requests
 import os
@@ -21,11 +22,33 @@ from league_bot.ingest_functions.save_tables import ingest_tables
 from league_bot.models import Champion
 from league_bot.stat_functions.champion import get_winrate, get_play_count
 
+class UploadItemPictures(BaseCommand):
+    def handle(self, *args, **kwargs):
+        if not os.path.isdir("/workspace/league_bot/tmp_images/item_pics"):
+            path = os.path.join("/workspace/league_bot/", "tmp_images/item_pics")
+            os.mkdir(path)
+
+        
+        
+
+        response  = requests.get(url=os.getenv("DATA_DRAGON_ITEM_URL"))
+        item_dict = json.loads(response.content.decode('utf-8'))
+        print(item_dict['type'].keys())
+        # all_champ_rows = Champion.objects.values()
+        # s3_resource = boto3.resource('s3')
+        # for champ_row in all_champ_rows:
+        #     champ_name = get_champion_picture(champ_row['champ_name'])
+        
+        #     print(f"Uploading {champ_name}...")
+        #     first_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"champ_pics/{champ_name}/{champ_name}.png")
+        #     first_object.upload_file(f"league_bot/tmp_images/champ_pics/{champ_name}.png")
+        pass
+
 
 class UploadChampionPictures(BaseCommand):
     def handle(self, *args, **kwargs):
-        if not os.path.isdir("league_bot/tmp_images/champ_stat_cards"):
-            path = os.path.join("/app/league_bot", "tmp_images")
+        if not os.path.isdir("league_bot/tmp_images/champ_pics"):
+            path = os.path.join("/league_bot", "tmp_images")
             os.mkdir(path)
             path = os.path.join(path, "champ_pics")
             os.mkdir(path)
@@ -75,4 +98,5 @@ class Champions(BaseCommand):
 class Command(django_subcommands.SubCommands):
     subcommands = {"champions": Champions,
      "upload_champ_stat_cards": UploadChampionStatCards,
-     "upload_champ_pics": UploadChampionPictures}
+     "upload_champ_pics": UploadChampionPictures,
+     "upload_item_pics": UploadItemPictures}
