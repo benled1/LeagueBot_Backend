@@ -15,3 +15,9 @@ def get_champion_picture(champ_name):
             champ_name = "Wukong"
         champ_img.save(f"league_bot/tmp_images/champ_pics/{champ_name}.png", "PNG")
         return champ_name
+
+def get_item_picture(item_id):
+        response = requests.get(f"{os.getenv(f'DATA_DRAGON_ITEM_IMAGE_URL')}{item_id}.png")
+        champ_img = Image.open(BytesIO(response.content))
+        champ_img.save(f"league_bot/tmp_images/item_pics/{item_id}.png", "PNG")
+        return item_id

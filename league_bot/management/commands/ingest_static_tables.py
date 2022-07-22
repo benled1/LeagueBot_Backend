@@ -28,9 +28,6 @@ class Test(BaseCommand):
         champ_name_list = get_champ_dict()
         for name in champ_name_list:
             Champion.objects.update_or_create(champ_name = name)
-            
-        
-
 
 
 class Command(django_subcommands.SubCommands):
