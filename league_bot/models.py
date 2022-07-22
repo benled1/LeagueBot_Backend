@@ -18,16 +18,52 @@ class Champion(models.Model):
     champ_winrate = models.FloatField(null=True, default=-1)
 
 
-class Builds(models.Model):
+class Slot_0_Items(models.Model):
     build_id = models.CharField(primary_key=True, max_length=50, default=0)
     champ_name = models.ForeignKey(Champion, on_delete=models.CASCADE, default="Default name")
-    item0 = models.IntegerField(null=True, default=1)
-    item1 = models.IntegerField(null=True, default=1)
-    item2 = models.IntegerField(null=True, default=1)
-    item3 = models.IntegerField(null=True, default=1)
-    item4 = models.IntegerField(null=True, default=1)
-    item5 = models.IntegerField(null=True, default=1)
-    win_rate = models.FloatField(null=True, default=1)
+    item0 = models.IntegerField(null=True, default=-1)
+    play_count = models.IntegerField(null=True, default=-1)
+    win_rate = models.FloatField(null=True, default=-1)
+
+
+
+class Slot_1_Items(models.Model):
+    build_id = models.CharField(primary_key=True, max_length=50, default=0)
+    champ_name = models.ForeignKey(Champion, on_delete=models.CASCADE, default="Default name")
+    item1 = models.IntegerField(null=True, default=-1)
+    play_count = models.IntegerField(null=True, default=-1)
+    win_rate = models.FloatField(null=True, default=-1)
+
+class Slot_2_Items(models.Model):
+    build_id = models.CharField(primary_key=True, max_length=50, default=0)
+    champ_name = models.ForeignKey(Champion, on_delete=models.CASCADE, default="Default name")
+    item2 = models.IntegerField(null=True, default=-1)
+    play_count = models.IntegerField(null=True, default=-1)
+    win_rate = models.FloatField(null=True, default=-1)
+
+
+class Slot_3_Items(models.Model):
+    build_id = models.CharField(primary_key=True, max_length=50, default=0)
+    champ_name = models.ForeignKey(Champion, on_delete=models.CASCADE, default="Default name")
+    item3 = models.IntegerField(null=True, default=-1)
+    play_count = models.IntegerField(null=True, default=-1)
+    win_rate = models.FloatField(null=True, default=-1)
+
+
+class Slot_4_Items(models.Model):
+    build_id = models.CharField(primary_key=True, max_length=50, default=0)
+    champ_name = models.ForeignKey(Champion, on_delete=models.CASCADE, default="Default name")
+    item4 = models.IntegerField(null=True, default=-1)
+    play_count = models.IntegerField(null=True, default=-1)
+    win_rate = models.FloatField(null=True, default=-1)
+
+
+class Slot_5_Items(models.Model):
+    build_id = models.CharField(primary_key=True, max_length=50, default=0)
+    champ_name = models.ForeignKey(Champion, on_delete=models.CASCADE, default="Default name")
+    item5 = models.IntegerField(null=True, default=-1)
+    play_count = models.IntegerField(null=True, default=-1)
+    win_rate = models.FloatField(null=True, default=-1)
 
 
 class Participant(models.Model):
