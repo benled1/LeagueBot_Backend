@@ -28,7 +28,11 @@ def get_item_counts(champion_name):
     part_df = pd.DataFrame(champ_entries)
     part_df_items = part_df[['item0', 'item1', 'item2', 'item3', 'item4', 'item5']]
     item_counts = part_df_items.apply(pd.Series.value_counts).sum(axis=1).sort_values(ascending=False).drop(0, axis=0)
-    print(item_counts)
+    champion_items = pd.DataFrame(item_counts, columns=['counts'])
+    champion_items['info_key'] = champion_items.index.astype(str) + str(champion_name)
+    print(champion_items)
+    return champion_items
+    
 
 
     pass
