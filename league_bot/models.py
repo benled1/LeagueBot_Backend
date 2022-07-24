@@ -1,3 +1,4 @@
+from multiprocessing.dummy import Array
 from numbers import Integral
 from django.db import models
 from django.forms import CharField, IntegerField, JSONField
@@ -19,59 +20,19 @@ class Champion(models.Model):
     champ_winrate = models.FloatField(null=True, default=-1)
 
 
-class Slot_0_Items(models.Model):
-    build_id = models.CharField(primary_key=True, max_length=50, default=0)
+class Items(models.Model):
+    item_id = models.IntegerField(primary_key=True)
+    item_name = models.CharField(max_length=50, default="default")
+    gold = models.IntegerField(null=True)
+    tags = ArrayField(models.CharField(max_length=30), size=10)
+
+
+class Champion_Items(models.Model):
+    info_key = models.CharField(primary_key=True, max_length=50, default="default000")
     champ_name = models.ForeignKey(Champion, on_delete=models.CASCADE, default="Default name")
-    item0 = models.IntegerField(null=True, default=-1)
-    play_count = models.IntegerField(null=True, default=-1)
-    win_rate = models.FloatField(null=True, default=-1)
-    # tags = ArrayField(models.CharField(max_length=30, blank=True), size=10, default=[])
-
-
-
-class Slot_1_Items(models.Model):
-    build_id = models.CharField(primary_key=True, max_length=50, default=0)
-    champ_name = models.ForeignKey(Champion, on_delete=models.CASCADE, default="Default name")
-    item1 = models.IntegerField(null=True, default=-1)
-    play_count = models.IntegerField(null=True, default=-1)
-    win_rate = models.FloatField(null=True, default=-1)
-    # tags = ArrayField(models.CharField(max_length=30, blank=True), size=10, default=[])
-
-class Slot_2_Items(models.Model):
-    build_id = models.CharField(primary_key=True, max_length=50, default=0)
-    champ_name = models.ForeignKey(Champion, on_delete=models.CASCADE, default="Default name")
-    item2 = models.IntegerField(null=True, default=-1)
-    play_count = models.IntegerField(null=True, default=-1)
-    win_rate = models.FloatField(null=True, default=-1)
-    # tags = ArrayField(models.CharField(max_length=30, blank=True), size=10, default=[])
-
-
-class Slot_3_Items(models.Model):
-    build_id = models.CharField(primary_key=True, max_length=50, default=0)
-    champ_name = models.ForeignKey(Champion, on_delete=models.CASCADE, default="Default name")
-    item3 = models.IntegerField(null=True, default=-1)
-    play_count = models.IntegerField(null=True, default=-1)
-    win_rate = models.FloatField(null=True, default=-1)
-    # tags = ArrayField(models.CharField(max_length=30, blank=True), size=10, default=[])
-
-
-class Slot_4_Items(models.Model):
-    build_id = models.CharField(primary_key=True, max_length=50, default=0)
-    champ_name = models.ForeignKey(Champion, on_delete=models.CASCADE, default="Default name")
-    item4 = models.IntegerField(null=True, default=-1)
-    play_count = models.IntegerField(null=True, default=-1)
-    win_rate = models.FloatField(null=True, default=-1)
-    # tags = ArrayField(models.CharField(max_length=30, blank=True), size=10, default=[])
-
-
-class Slot_5_Items(models.Model):
-    build_id = models.CharField(primary_key=True, max_length=50, default=0)
-    champ_name = models.ForeignKey(Champion, on_delete=models.CASCADE, default="Default name")
-    item5 = models.IntegerField(null=True, default=-1)
-    play_count = models.IntegerField(null=True, default=-1)
-    win_rate = models.FloatField(null=True, default=-1)
-    # tags = ArrayField(models.CharField(max_length=30, blank=True), size=10, default=[])
-
+    item_id = models.IntegerField(null=True)
+    play_count = models.IntegerField(null=True)
+    
 
 class Participant(models.Model):
     match = models.ForeignKey(Match, on_delete=models.CASCADE, default=0)
