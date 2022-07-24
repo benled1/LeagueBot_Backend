@@ -25,7 +25,9 @@ from league_bot.stat_functions.champion import get_winrate, get_play_count
 
 class Test(BaseCommand):
     def handle(self, *args, **kwargs):
-        get_item_build(champ_name="Annie")
+        response  = requests.get(url=os.getenv("DATA_DRAGON_ITEM_URL"))
+        item_dict = json.loads(response.content.decode('utf-8'))
+        print(item_dict['data'].keys())
         pass
 
 
