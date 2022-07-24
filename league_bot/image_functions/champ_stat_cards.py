@@ -17,6 +17,11 @@ Continue working on adding the item images to the champ_stat_card:
 
 
 def add_winrate_playcount(stat_card, champ_winrate, champ_play_count):
+    """
+    :param stat_card: The PIL object to be drawn onto
+    :param champ_winrate: The winrate of the champion 
+    :param champ_play_count: The number of games the champion has been recorded playing. 
+    """
     draw = ImageDraw.Draw(stat_card)
     number_font = ImageFont.truetype("league_bot/fonts/Friz_Quadrata_Regular.ttf", 100)
     label_font = ImageFont.truetype("league_bot/fonts/Friz_Quadrata_Bold.otf", 25)
