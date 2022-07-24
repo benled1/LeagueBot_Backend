@@ -8,7 +8,7 @@ import django_subcommands
 from league_bot.models import Participant
 from django.core.management.base import BaseCommand
 from league_bot.ingest_functions.save_tables import ingest_tables
-from league_bot.models import Champion
+from league_bot.models import Champion, Champion_Items
 from league_bot.stat_functions.champion import get_winrate, get_play_count, get_item_counts
 
 
@@ -42,10 +42,13 @@ class ChampionStats(BaseCommand):
             play_count = get_play_count(all_champ_part_records=all_champ_part_records)
             Champion.objects.filter(champ_name=champion['champ_name']).update(champ_play_count=play_count)
 
-            # for slot_num in range(0,6):
-            #     build_df = get_bis_item(champion_name=champion['champ_name'], slot_num=slot_num)
-            #     if isinstance(build_df, pd.DataFrame):
-            #         create_item_entry(build_df, slot_num=slot_num)
+            item_counts = get_item_counts(champion_name=champion['champ_name'])
+            """
+            For next time:
+            update all the fields in Champion_Items Model, all the info is there in item_counts df ^^^
+
+            """
+            
 
 
 class Command(django_subcommands.SubCommands):
