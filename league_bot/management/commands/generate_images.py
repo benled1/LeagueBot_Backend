@@ -14,13 +14,18 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 
-from league_bot.image_functions.champ_stat_cards import get_champion_stat_card
+from league_bot.image_functions.champ_stat_cards import get_champion_stat_card, add_item_build
 from league_bot.image_functions.champ_pictures import get_champion_picture, get_item_picture
 from league_bot.models import Participant
 from django.core.management.base import BaseCommand
 from league_bot.ingest_functions.save_tables import ingest_tables
 from league_bot.models import Champion
 from league_bot.stat_functions.champion import get_winrate, get_play_count
+
+
+class Test(BaseCommand):
+    def handle(self, *args, **kwargs):
+        add_item_build(stat_card=None, champ_name="Aatrox")
 
 class UploadItemPictures(BaseCommand):
     def handle(self, *args, **kwargs):
@@ -95,4 +100,5 @@ class Command(django_subcommands.SubCommands):
     subcommands = {"champions": Champions,
      "upload_champ_stat_cards": UploadChampionStatCards,
      "upload_champ_pics": UploadChampionPictures,
-     "upload_item_pics": UploadItemPictures}
+     "upload_item_pics": UploadItemPictures,
+     "test": Test}

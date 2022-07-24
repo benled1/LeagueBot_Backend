@@ -1,7 +1,9 @@
 import boto3
+import os
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
+from league_bot.models import Slot_0_Items, Slot_1_Items, Slot_2_Items, Slot_3_Items, Slot_4_Items, Slot_5_Items
 """
 For next time:
 
@@ -33,7 +35,23 @@ def add_winrate_playcount(stat_card, champ_winrate, champ_play_count):
     draw.text((20, 300),f"{champ_play_count}",(115,91, 48),font=number_font)
     draw.text((20, 400),f"MATCHES",(115,91, 48),font=label_font)
     return stat_card
-    pass
+
+
+def add_item_build(stat_card, champ_name):
+    if not os.path.isdir(f"/{os.getenv('ROOT_DIR')}/league_bot/tmp_images/item_pics"):
+        path = os.path.join(f"/{os.getenv('ROOT_DIR')}/league_bot", "tmp_images")
+        os.mkdir(path)
+        path = os.path.join(path, "item_pics")
+        os.mkdir(path)
+
+    slot_0_items = Slot_0_Items.objects.filter(champ_name=champ_name).order_by("-play_count")
+
+    s3_resource = boto3.resource('s3')
+    for item in slot_0_items[:3]:
+        print(f"{item.item0}.png")
+        item_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"item_pics/{item.item0}/{item.item0}.png")
+        item_object.download_file(f"league_bot/tmp_images/item_pics/{item.item0}.png")
+
 
 
 
