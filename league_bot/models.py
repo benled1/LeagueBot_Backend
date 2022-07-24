@@ -1,6 +1,7 @@
 from numbers import Integral
 from django.db import models
 from django.forms import CharField, IntegerField, JSONField
+from django.contrib.postgres.fields import ArrayField
 
 
 class Match(models.Model):
@@ -24,6 +25,7 @@ class Slot_0_Items(models.Model):
     item0 = models.IntegerField(null=True, default=-1)
     play_count = models.IntegerField(null=True, default=-1)
     win_rate = models.FloatField(null=True, default=-1)
+    # tags = ArrayField(models.CharField(max_length=30, blank=True), size=10, default=[])
 
 
 
@@ -33,6 +35,7 @@ class Slot_1_Items(models.Model):
     item1 = models.IntegerField(null=True, default=-1)
     play_count = models.IntegerField(null=True, default=-1)
     win_rate = models.FloatField(null=True, default=-1)
+    # tags = ArrayField(models.CharField(max_length=30, blank=True), size=10, default=[])
 
 class Slot_2_Items(models.Model):
     build_id = models.CharField(primary_key=True, max_length=50, default=0)
@@ -40,6 +43,7 @@ class Slot_2_Items(models.Model):
     item2 = models.IntegerField(null=True, default=-1)
     play_count = models.IntegerField(null=True, default=-1)
     win_rate = models.FloatField(null=True, default=-1)
+    # tags = ArrayField(models.CharField(max_length=30, blank=True), size=10, default=[])
 
 
 class Slot_3_Items(models.Model):
@@ -48,6 +52,7 @@ class Slot_3_Items(models.Model):
     item3 = models.IntegerField(null=True, default=-1)
     play_count = models.IntegerField(null=True, default=-1)
     win_rate = models.FloatField(null=True, default=-1)
+    # tags = ArrayField(models.CharField(max_length=30, blank=True), size=10, default=[])
 
 
 class Slot_4_Items(models.Model):
@@ -56,6 +61,7 @@ class Slot_4_Items(models.Model):
     item4 = models.IntegerField(null=True, default=-1)
     play_count = models.IntegerField(null=True, default=-1)
     win_rate = models.FloatField(null=True, default=-1)
+    # tags = ArrayField(models.CharField(max_length=30, blank=True), size=10, default=[])
 
 
 class Slot_5_Items(models.Model):
@@ -64,6 +70,7 @@ class Slot_5_Items(models.Model):
     item5 = models.IntegerField(null=True, default=-1)
     play_count = models.IntegerField(null=True, default=-1)
     win_rate = models.FloatField(null=True, default=-1)
+    # tags = ArrayField(models.CharField(max_length=30, blank=True), size=10, default=[])
 
 
 class Participant(models.Model):
