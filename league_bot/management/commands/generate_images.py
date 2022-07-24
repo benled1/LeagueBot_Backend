@@ -14,7 +14,7 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 
-from league_bot.image_functions.champ_stat_cards import get_champion_stat_card, add_item_build
+from league_bot.image_functions.champ_stat_cards import get_champion_stat_card, get_item_build
 from league_bot.image_functions.champ_pictures import get_champion_picture, get_item_picture
 from league_bot.models import Participant
 from django.core.management.base import BaseCommand
@@ -25,7 +25,9 @@ from league_bot.stat_functions.champion import get_winrate, get_play_count
 
 class Test(BaseCommand):
     def handle(self, *args, **kwargs):
-        add_item_build(stat_card=None, champ_name="Aatrox")
+        get_item_build(champ_name="Annie")
+        pass
+
 
 class UploadItemPictures(BaseCommand):
     def handle(self, *args, **kwargs):
