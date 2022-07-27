@@ -8,7 +8,7 @@ import django_subcommands
 from league_bot.models import Participant
 from django.core.management.base import BaseCommand
 from league_bot.ingest_functions.save_tables import ingest_tables
-from league_bot.models import Champion, Champion_Items
+from league_bot.models import Champion, Champion_Items, Items
 from league_bot.stat_functions.champion import get_winrate, get_play_count, get_item_counts
 
 
@@ -47,10 +47,11 @@ class ChampionStats(BaseCommand):
             except KeyError:
                 continue
             for index, row in item_counts.iterrows():
+                print(f"INDEX:{index}")
                 Champion_Items.objects.update_or_create(
                     info_key=row['info_key'],
                     champ_name=Champion.objects.get(champ_name=champion['champ_name']),
-                    item_id=index,
+                    item_id=Items.objects.get(item_id=index),
                     play_count=row['counts']
                 )
 

@@ -28,11 +28,16 @@ class Ingest_Items(BaseCommand):
         item_dict = get_item_dict()
         Items.objects.all().delete()
         for item in list(item_dict.keys()):
+            try:
+                into = item_dict[item]['into']
+            except KeyError:
+                into = []
             Items.objects.update_or_create(
                 item_id=item,
                 item_name=item_dict[item]['name'],
                 gold=item_dict[item]['gold']['total'],
-                tags=item_dict[item]['tags'])
+                tags=item_dict[item]['tags'],
+                builds_into=into)
         print(item_dict)
 
 class Test(BaseCommand):

@@ -22,16 +22,16 @@ class Champion(models.Model):
 
 class Items(models.Model):
     item_id = models.IntegerField(primary_key=True)
-    item_name = models.CharField(max_length=50, default="default")
+    item_name = models.CharField(max_length=200, default="default")
     gold = models.IntegerField(null=True)
-    tags = ArrayField(models.CharField(max_length=30), size=10)
-    builds_into = ArrayField(models.CharField(max_length=30), size=10)
+    tags = ArrayField(models.CharField(max_length=30), size=10, null=True)
+    builds_into = ArrayField(models.CharField(max_length=30), size=10, null=True)
 
 
 class Champion_Items(models.Model):
     info_key = models.CharField(primary_key=True, max_length=50, default="default000")
     champ_name = models.ForeignKey(Champion, on_delete=models.CASCADE, default="Default name")
-    item_id = models.IntegerField(null=True)
+    item_id = models.ForeignKey(Items, on_delete=models.CASCADE, default=0)
     play_count = models.IntegerField(null=True)
     
 
