@@ -38,6 +38,10 @@ def add_winrate_playcount(stat_card, champ_winrate, champ_play_count):
     return stat_card
 
 
+
+    
+
+
 def get_item_build(champ_name):
     if not os.path.isdir(f"/{os.getenv('ROOT_DIR')}/league_bot/tmp_images/item_pics"):
         path = os.path.join(f"/{os.getenv('ROOT_DIR')}/league_bot", "tmp_images")
