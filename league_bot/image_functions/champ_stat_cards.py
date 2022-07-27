@@ -48,6 +48,17 @@ def find_best_boots(champ_name):
 
 
 def get_item_build(champ_name):
+    """
+    TODO:
+    - Finish the find best boots functino
+    - Finish the find mythic function (take into consideration that Ornn items have different item ids as
+        the regular mythic even though same item.)
+    - Finish finding remaining full items function
+    - NOTE: Mythic items say mythic in the plaintext field, try adding that to model,
+    - NOTE: Ornn upgrades have reuired_Ally: Ornn in dict, add that to model too
+    - NOTE: do some check to see if Ornn item and then match it to the actual item.
+    - NOTE: If all else fails, just hardcode a dict or smth >:)
+    """
     find_best_boots(champ_name=champ_name)
     pass
 def get_champion_stat_card(champ_row):
