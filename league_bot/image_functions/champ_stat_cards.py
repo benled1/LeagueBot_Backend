@@ -5,7 +5,7 @@ import pandas as pd
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
-from league_bot.models import Champion_Items, Champion
+from league_bot.models import Champion_Items, Champion, Items
 """
 For next time:
 
@@ -39,18 +39,31 @@ def add_winrate_playcount(stat_card, champ_winrate, champ_play_count):
     return stat_card
 
 def find_best_boots(champ_name):
-    champion = Champion.objects.get(champ_name=champ_name)
-    champion_items = Champion_Items.objects.filter(champ_name=champ_name).values()
-    print(champion_items)
-    champ_items_df = pd.DataFrame(champion_items)
-    print(champ_items_df)
-    # for item in champion_items:
+    all_boots = list(Items.objects.filter(tags__contains=["Boots"]).values())
+    all_boot_ids = [item_dict['item_id'] for item_dict in all_boots]
+    print(all_boot_ids)
+  
+    champion_boots = Champion_Items.objects.filter(champ_name=champ_name).filter(item_id__in=all_boot_ids).order_by("-play_count").values()
+
+    print(champion_boots)
+    best_boots = champion_boots[0]
+
+    return best_boots
+
+def find_best_mythic(champ_name):
+    all_mythics = list(Items.objects.filter(description__contains="rarityMythic").values())
+    all_mythic_ids = [item_dict['item_id'] for item_dict in all_mythics]
+    print(all_mythic_ids)
+
+    champion_mythic = Champion_Items.objects.filter(champ_name=champ_name).filter(item_id__in=all_mythic_ids).order_by("-play_count").values()
+    print(champion_mythic)
+    pass
 
 
 def get_item_build(champ_name):
     """
     TODO:
-    - Finish the find best boots functino
+    - Finish the find best boots function
     - Finish the find mythic function (take into consideration that Ornn items have different item ids as
         the regular mythic even though same item.)
     - Finish finding remaining full items function
@@ -59,8 +72,14 @@ def get_item_build(champ_name):
     - NOTE: do some check to see if Ornn item and then match it to the actual item.
     - NOTE: If all else fails, just hardcode a dict or smth >:)
     """
-    find_best_boots(champ_name=champ_name)
-    pass
+    best_boots = find_best_boots(champ_name=champ_name)
+    best_mythic = find_best_mythic(champ_name=champ_name)
+    print(best_mythic)
+    
+
+
+
+
 def get_champion_stat_card(champ_row):
     champ_winrate = round(champ_row['champ_winrate'] * 100, 2)
     champ_play_count = champ_row['champ_play_count']
