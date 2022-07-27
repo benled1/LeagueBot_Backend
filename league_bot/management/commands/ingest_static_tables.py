@@ -32,12 +32,17 @@ class Ingest_Items(BaseCommand):
                 into = item_dict[item]['into']
             except KeyError:
                 into = []
+            try:
+                item_text = item_dict[item]['description']
+            except KeyError:
+                item_text = ""
             Items.objects.update_or_create(
                 item_id=item,
                 item_name=item_dict[item]['name'],
                 gold=item_dict[item]['gold']['total'],
                 tags=item_dict[item]['tags'],
-                builds_into=into)
+                builds_into=into,
+                description=item_text)
         print(item_dict)
 
 class Test(BaseCommand):
