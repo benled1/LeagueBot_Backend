@@ -5,7 +5,11 @@ import pandas as pd
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
+from dotenv import load_dotenv
 from league_bot.models import Champion_Items, Champion, Items
+from django.db.models import Q
+
+load_dotenv()
 """
 For next time:
 
@@ -41,24 +45,32 @@ def add_winrate_playcount(stat_card, champ_winrate, champ_play_count):
 def find_best_boots(champ_name):
     all_boots = list(Items.objects.filter(tags__contains=["Boots"]).values())
     all_boot_ids = [item_dict['item_id'] for item_dict in all_boots]
-    print(all_boot_ids)
+
   
-    champion_boots = Champion_Items.objects.filter(champ_name=champ_name).filter(item_id__in=all_boot_ids).order_by("-play_count").values()
-
-    print(champion_boots)
-    best_boots = champion_boots[0]
-
-    return best_boots
+    champion_boots = list(Champion_Items.objects.filter(champ_name=champ_name).filter(item_id__in=all_boot_ids).order_by("-play_count").values())
+    if champion_boots != []:
+        best_boots = champion_boots[0]
+        return best_boots
+    
+    return "no_boots"
 
 def find_best_mythic(champ_name):
     all_mythics = list(Items.objects.filter(description__contains="rarityMythic").values())
     all_mythic_ids = [item_dict['item_id'] for item_dict in all_mythics]
-    print(all_mythic_ids)
+
 
     champion_mythic = Champion_Items.objects.filter(champ_name=champ_name).filter(item_id__in=all_mythic_ids).order_by("-play_count").values()
-    print(champion_mythic)
-    pass
+    best_mythic = champion_mythic[0]
+    return best_mythic
 
+def find_best_full_items(champ_name, count=4):
+    all_full_items = list(Items.objects.filter(builds_into=[]).filter(gold__gte=500).values().filter(~Q(tags__contains=["Boots"])))
+    all_full_item_ids = [item_dict['item_id'] for item_dict in all_full_items]
+
+    champion_full_items = list(Champion_Items.objects.filter(champ_name=champ_name).filter(item_id__in=all_full_item_ids).order_by("-play_count").values())
+    best_full_items = champion_full_items[:count]
+    return best_full_items
+    
 
 def get_item_build(champ_name):
     """
@@ -74,17 +86,52 @@ def get_item_build(champ_name):
     """
     best_boots = find_best_boots(champ_name=champ_name)
     best_mythic = find_best_mythic(champ_name=champ_name)
-    print(best_mythic)
+    if best_boots == "no_boots":
+        best_full_items = find_best_full_items(champ_name=champ_name, count=5)
+        best_build_dict = {
+        "boots/item5": best_full_items[4],
+        "mythic": best_mythic,
+        "item1": best_full_items[0],
+        "item2": best_full_items[1],
+        "item3": best_full_items[2],
+        "item4": best_full_items[3],
+    }
+    else:
+        best_full_items = find_best_full_items(champ_name=champ_name)
+        best_build_dict = {
+        "boots/item5": best_boots,
+        "mythic": best_mythic,
+        "item1": best_full_items[0],
+        "item2": best_full_items[1],
+        "item3": best_full_items[2],
+        "item4": best_full_items[3],
+    }
+
     
+    return best_build_dict
 
+def add_items(build_dict):
 
+    if not os.path.isdir(f"/{os.getenv('ROOT_DIR')}/league_bot/tmp_images/item_pics"):
+        try:
+            path = os.path.join(f"/{os.getenv('ROOT_DIR')}/league_bot", "tmp_images")
+            os.mkdir(path)
+            path = os.path.join(path, "item_pics")
+            os.mkdir(path)
+        except FileExistsError:
+            path = os.path.join(path, "item_pics")
+            os.mkdir(path)
 
+    s3_resource = boto3.resource('s3')
+    print(build_dict['boots/item5']['item_id_id'])
+    boots_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"item_pics/{build_dict['boots/item5']['item_id_id']}/{build_dict['boots/item5']['item_id_id']}.png")
+    boots_object.download_file(f"league_bot/tmp_images/item_pics/{build_dict['boots/item5']['item_id_id']}.png")
+    pass
+    
 
 def get_champion_stat_card(champ_row):
     champ_winrate = round(champ_row['champ_winrate'] * 100, 2)
     champ_play_count = champ_row['champ_play_count']
-
-    s3_resource = boto3.resource('s3')
 
     stat_card = Image.open("league_bot/static_images/backdrop.jpeg")
     stat_card = add_winrate_playcount(stat_card=stat_card, champ_winrate=champ_winrate, champ_play_count=champ_play_count)
@@ -92,12 +139,15 @@ def get_champion_stat_card(champ_row):
     
     if champ_row['champ_name'] != 'MonkeyKing':
         champ_name = champ_row['champ_name']
-        item_dict = get_item_build(champ_name=champ_name)
-        stat_card = add_items(stat_card=stat_card, item_dict=item_dict)
+        print(f"Adding build for {champ_name}")
+        build_dict = get_item_build(champ_name=champ_name)
+        add_items(build_dict=build_dict)
     else:
+        champ_name = champ_row['champ_name']
+        print(f"Adding build for {champ_name}")
+        build_dict = get_item_build(champ_name=champ_name)
+        add_items(build_dict=build_dict)
         champ_name = "Wukong"
-        item_dict = get_item_build(champ_name=champ_name)
-        stat_card = add_items(stat_card=stat_card, item_dict=item_dict)
     stat_card.save(f"league_bot/tmp_images/champ_stat_cards/{champ_name}.png", "PNG")
 
     return champ_name
