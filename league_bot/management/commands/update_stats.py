@@ -42,11 +42,25 @@ class ChampionStats(BaseCommand):
             play_count = get_play_count(all_champ_part_records=all_champ_part_records)
             Champion.objects.filter(champ_name=champion['champ_name']).update(champ_play_count=play_count)
 
-            item_counts = get_item_counts(champion_name=champion['champ_name'])
+            try:
+                item_counts = get_item_counts(champion_name=champion['champ_name'])
+            except KeyError:
+                continue
+            for index, row in item_counts.iterrows():
+                Champion_Items.objects.update_or_create(
+                    info_key=row['info_key'],
+                    champ_name=Champion.objects.get(champ_name=champion['champ_name']),
+                    item_id=index,
+                    play_count=row['counts']
+                )
+
+
+
             """
             For next time:
             update all the fields in Champion_Items Model, all the info is there in item_counts df ^^^
-
+             ALSO ADD THE FIELD 'BUILDS INTO' THIS CAN BE USED TO CHECK IF FULL ITEM OR NOT SINCE 
+             FULL ITEMS DO NOT HAVE INTO ANYTHING
             """
             
 

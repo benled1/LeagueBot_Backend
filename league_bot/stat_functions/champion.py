@@ -34,9 +34,6 @@ def get_item_counts(champion_name):
     return champion_items
     
 
-
-    pass
-
     # print(f"{len(total_build_counts)} builds for {champion_name}")
     # for build in total_build_counts:
     #     if build not in win_build_counts:

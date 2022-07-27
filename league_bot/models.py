@@ -25,6 +25,7 @@ class Items(models.Model):
     item_name = models.CharField(max_length=50, default="default")
     gold = models.IntegerField(null=True)
     tags = ArrayField(models.CharField(max_length=30), size=10)
+    builds_into = ArrayField(models.CharField(max_length=30), size=10)
 
 
 class Champion_Items(models.Model):
