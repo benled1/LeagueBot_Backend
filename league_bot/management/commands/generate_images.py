@@ -79,7 +79,7 @@ class UploadChampionStatCards(BaseCommand):
             os.mkdir(path)
 
         todays_date = dt.now(datetime.timezone.utc).strftime(r"%m-%d-%Y")
-        all_champ_rows = Champion.objects.values()
+        all_champ_rows = Champion.objects.filter(champ_play_count__gt=0).values()
         s3_resource = boto3.resource('s3')
         for champ_row in all_champ_rows:
             champ_name = get_champion_stat_card(champ_row=champ_row)
