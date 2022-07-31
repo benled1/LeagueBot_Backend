@@ -1,3 +1,4 @@
+from distutils.command.build import build
 from turtle import xcor, ycor
 import boto3
 import os
@@ -110,7 +111,7 @@ def get_item_build(champ_name):
     
     return best_build_dict
 
-def add_items(build_dict):
+def add_items(build_dict, stat_card):
 
     if not os.path.isdir(f"/{os.getenv('ROOT_DIR')}/league_bot/tmp_images/item_pics"):
         try:
@@ -126,6 +127,17 @@ def add_items(build_dict):
     print(build_dict['boots/item5']['item_id_id'])
     boots_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"item_pics/{build_dict['boots/item5']['item_id_id']}/{build_dict['boots/item5']['item_id_id']}.png")
     boots_object.download_file(f"league_bot/tmp_images/item_pics/{build_dict['boots/item5']['item_id_id']}.png")
+    item = Image.open(f"league_bot/tmp_images/item_pics/{build_dict['boots/item5']['item_id_id']}.png")
+    x_pos, y_pos = (400,100)
+    stat_card.paste(item, (x_pos, y_pos))
+
+    mystic_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"item_pics/{build_dict['mythic']['item_id_id']}/{build_dict['mythic']['item_id_id']}.png")
+    mystic_object.download_file(f"league_bot/tmp_images/item_pics/{build_dict['mythic']['item_id_id']}.png")
+    item = Image.open(f"league_bot/tmp_images/item_pics/{build_dict['mythic']['item_id_id']}.png")
+    x_pos, y_pos = (500,100)
+    stat_card.paste(item, (x_pos, y_pos))
+
+
     pass
     
 
@@ -141,12 +153,12 @@ def get_champion_stat_card(champ_row):
         champ_name = champ_row['champ_name']
         print(f"Adding build for {champ_name}")
         build_dict = get_item_build(champ_name=champ_name)
-        add_items(build_dict=build_dict)
+        add_items(build_dict=build_dict, stat_card=stat_card)
     else:
         champ_name = champ_row['champ_name']
         print(f"Adding build for {champ_name}")
         build_dict = get_item_build(champ_name=champ_name)
-        add_items(build_dict=build_dict)
+        add_items(build_dict=build_dict, stat_card=stat_card)
         champ_name = "Wukong"
     stat_card.save(f"league_bot/tmp_images/champ_stat_cards/{champ_name}.png", "PNG")
 
