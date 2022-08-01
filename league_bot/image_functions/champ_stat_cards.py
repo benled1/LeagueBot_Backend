@@ -65,7 +65,9 @@ def find_best_mythic(champ_name):
     return best_mythic
 
 def find_best_full_items(champ_name, count=4):
-    all_full_items = list(Items.objects.filter(builds_into=[]).filter(gold__gte=500).values().filter(~Q(tags__contains=["Boots"])))
+    all_full_items = list(Items.objects.filter(builds_into=[]).filter(gold__gt=500).values()
+                                        .filter(~Q(tags__contains=["Boots"]))
+                                        .filter(~Q(description__contains="rarityMythic")))
     all_full_item_ids = [item_dict['item_id'] for item_dict in all_full_items]
 
     champion_full_items = list(Champion_Items.objects.filter(champ_name=champ_name).filter(item_id__in=all_full_item_ids).order_by("-play_count").values())
@@ -129,14 +131,49 @@ def add_items(build_dict, stat_card):
     boots_object.download_file(f"league_bot/tmp_images/item_pics/{build_dict['boots/item5']['item_id_id']}.png")
     item = Image.open(f"league_bot/tmp_images/item_pics/{build_dict['boots/item5']['item_id_id']}.png")
     x_pos, y_pos = (400,100)
+    width, height = item.size
+    item = item.resize((round(width*1.5), round(height*1.5)))
     stat_card.paste(item, (x_pos, y_pos))
 
     mystic_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"item_pics/{build_dict['mythic']['item_id_id']}/{build_dict['mythic']['item_id_id']}.png")
     mystic_object.download_file(f"league_bot/tmp_images/item_pics/{build_dict['mythic']['item_id_id']}.png")
     item = Image.open(f"league_bot/tmp_images/item_pics/{build_dict['mythic']['item_id_id']}.png")
     x_pos, y_pos = (500,100)
+    width, height = item.size
+    item = item.resize((round(width*1.5), round(height*1.5)))
     stat_card.paste(item, (x_pos, y_pos))
 
+    item1_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"item_pics/{build_dict['item1']['item_id_id']}/{build_dict['item1']['item_id_id']}.png")
+    item1_object.download_file(f"league_bot/tmp_images/item_pics/{build_dict['item1']['item_id_id']}.png")
+    item = Image.open(f"league_bot/tmp_images/item_pics/{build_dict['item1']['item_id_id']}.png")
+    x_pos, y_pos = (600,100)
+    width, height = item.size
+    item = item.resize((round(width*1.5), round(height*1.5)))
+    stat_card.paste(item, (x_pos, y_pos))
+
+    item2_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"item_pics/{build_dict['item2']['item_id_id']}/{build_dict['item2']['item_id_id']}.png")
+    item2_object.download_file(f"league_bot/tmp_images/item_pics/{build_dict['item2']['item_id_id']}.png")
+    item = Image.open(f"league_bot/tmp_images/item_pics/{build_dict['item2']['item_id_id']}.png")
+    x_pos, y_pos = (700,100)
+    width, height = item.size
+    item = item.resize((round(width*1.5), round(height*1.5)))
+    stat_card.paste(item, (x_pos, y_pos))
+
+    item3_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"item_pics/{build_dict['item3']['item_id_id']}/{build_dict['item3']['item_id_id']}.png")
+    item3_object.download_file(f"league_bot/tmp_images/item_pics/{build_dict['item3']['item_id_id']}.png")
+    item = Image.open(f"league_bot/tmp_images/item_pics/{build_dict['item3']['item_id_id']}.png")
+    x_pos, y_pos = (800,100)
+    width, height = item.size
+    item = item.resize((round(width*1.5), round(height*1.5)))
+    stat_card.paste(item, (x_pos, y_pos))
+
+    item4_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"item_pics/{build_dict['item4']['item_id_id']}/{build_dict['item4']['item_id_id']}.png")
+    item4_object.download_file(f"league_bot/tmp_images/item_pics/{build_dict['item4']['item_id_id']}.png")
+    item = Image.open(f"league_bot/tmp_images/item_pics/{build_dict['item4']['item_id_id']}.png")
+    x_pos, y_pos = (900,100)
+    width, height = item.size
+    item = item.resize((round(width*1.5), round(height*1.5)))
+    stat_card.paste(item, (x_pos, y_pos))
 
     pass
     
