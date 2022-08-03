@@ -5,8 +5,8 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 from dotenv import load_dotenv
-from find_build import get_item_build
-from add_pictures import add_items, add_winrate_playcount
+from .find_build import get_item_build
+from .add_pictures import add_items, add_winrate_playcount
 from league_bot.models import Champion_Items, Champion, Items
 from django.db.models import Q
 
