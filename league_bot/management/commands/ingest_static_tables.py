@@ -7,7 +7,7 @@ import os
 from django.core.management.base import BaseCommand
 from league_bot.ingest_functions.save_tables import ingest_tables
 from django.db.utils import IntegrityError
-from league_bot.models import Match, Participant, Champion
+from league_bot.models import Match, Participant, Champion, Items
 # from league_bot.stat_functions import champ_group
 
 
@@ -17,6 +17,32 @@ def get_champ_dict():
     champ_name_list = list(champ_dict['data'].keys())
     return champ_name_list    
 
+def get_item_dict():
+    response = requests.get(os.getenv('DATA_DRAGON_ITEM_URL'))
+    item_dict = json.loads(response.content)
+    return item_dict['data']
+
+class Ingest_Items(BaseCommand):
+    def handle(self, *args, **kwargs):
+        item_dict = get_item_dict()
+        Items.objects.all().delete()
+        for item in list(item_dict.keys()):
+            try:
+                into = item_dict[item]['into']
+            except KeyError:
+                into = []
+            try:
+                item_text = item_dict[item]['description']
+            except KeyError:
+                item_text = ""
+            Items.objects.update_or_create(
+                item_id=item,
+                item_name=item_dict[item]['name'],
+                gold=item_dict[item]['gold']['total'],
+                tags=item_dict[item]['tags'],
+                builds_into=into,
+                description=item_text)
+        print(item_dict)
 
 class Test(BaseCommand):
     """
@@ -31,4 +57,5 @@ class Test(BaseCommand):
 
 
 class Command(django_subcommands.SubCommands):
-    subcommands = {"test": Test}
+    subcommands = {"test": Test,
+                    "items": Ingest_Items}

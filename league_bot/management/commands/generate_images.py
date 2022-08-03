@@ -13,19 +13,21 @@ import datetime
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
+# from dotenv import load_dotenv
 
 from league_bot.image_functions.champ_stat_cards import get_champion_stat_card, get_item_build
 from league_bot.image_functions.champ_pictures import get_champion_picture, get_item_picture
-from league_bot.models import Participant
 from django.core.management.base import BaseCommand
-from league_bot.ingest_functions.save_tables import ingest_tables
 from league_bot.models import Champion
-from league_bot.stat_functions.champion import get_winrate, get_play_count
+from league_bot.stat_functions.champion import get_item_counts
+
+
+
 
 
 class Test(BaseCommand):
     def handle(self, *args, **kwargs):
-        get_item_build(champ_name="Annie")
+        get_item_counts("Cassiopeia")
         pass
 
 
@@ -77,15 +79,15 @@ class UploadChampionStatCards(BaseCommand):
             os.mkdir(path)
 
         todays_date = dt.now(datetime.timezone.utc).strftime(r"%m-%d-%Y")
-        all_champ_rows = Champion.objects.values()
+        all_champ_rows = Champion.objects.filter(champ_play_count__gt=0).values()
         s3_resource = boto3.resource('s3')
         for champ_row in all_champ_rows:
             champ_name = get_champion_stat_card(champ_row=champ_row)
 
-            print(f"Uploading {champ_name}...")
-            print(todays_date)
-            first_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"champ_stat_cards/{champ_name}/{champ_name}{todays_date}.png")
-            first_object.upload_file(f"league_bot/tmp_images/champ_stat_cards/{champ_name}.png")
+            # print(f"Uploading {champ_name}...")
+            # print(todays_date)
+            # first_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"champ_stat_cards/{champ_name}/{champ_name}{todays_date}.png")
+            # first_object.upload_file(f"league_bot/tmp_images/champ_stat_cards/{champ_name}.png")
 
                 
 class Champions(BaseCommand):
