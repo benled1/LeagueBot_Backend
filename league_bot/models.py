@@ -1,6 +1,8 @@
+from multiprocessing.dummy import Array
 from numbers import Integral
 from django.db import models
 from django.forms import CharField, IntegerField, JSONField
+from django.contrib.postgres.fields import ArrayField
 
 
 class Match(models.Model):
@@ -16,6 +18,23 @@ class Champion(models.Model):
     champ_name = models.CharField(primary_key=True, max_length=50, default="Default name")
     champ_play_count = models.IntegerField(null=True, default=-1)
     champ_winrate = models.FloatField(null=True, default=-1)
+
+
+class Items(models.Model):
+    item_id = models.IntegerField(primary_key=True)
+    item_name = models.CharField(max_length=200, default="default")
+    gold = models.IntegerField(null=True)
+    tags = ArrayField(models.CharField(max_length=30), size=10, null=True)
+    builds_into = ArrayField(models.CharField(max_length=30), size=10, null=True)
+    description = models.CharField(max_length=3000, null=True)
+
+
+class Champion_Items(models.Model):
+    info_key = models.CharField(primary_key=True, max_length=50, default="default000")
+    champ_name = models.ForeignKey(Champion, on_delete=models.CASCADE, default="Default name")
+    item_id = models.ForeignKey(Items, on_delete=models.CASCADE, default=0)
+    play_count = models.IntegerField(null=True)
+    
 
 class Participant(models.Model):
     match = models.ForeignKey(Match, on_delete=models.CASCADE, default=0)
@@ -34,7 +53,6 @@ class Participant(models.Model):
     total_time_spent_dead = models.IntegerField(null=True)
     triple_kills = models.IntegerField(null=True)
     
-
     # runes and perks
     perks = models.JSONField(null=True)
 
@@ -154,6 +172,19 @@ class Participant(models.Model):
     item4 = models.IntegerField(null=True)
     item5 = models.IntegerField(null=True)
     items_purchased = models.IntegerField(null=True)
+
+    # item build
+    @property
+    def item_build(self):
+        item_build  = {
+            'item0': self.item0,
+            'item1': self.item1,
+            'item2': self.item2,
+            'item3': self.item3,
+            'item4': self.item4,
+            'item5': self.item5,
+        }
+        return item_build
 
 
 
