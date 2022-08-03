@@ -1,6 +1,8 @@
+from multiprocessing.dummy import Array
 from numbers import Integral
 from django.db import models
 from django.forms import CharField, IntegerField, JSONField
+from django.contrib.postgres.fields import ArrayField
 
 
 class Match(models.Model):
@@ -18,16 +20,21 @@ class Champion(models.Model):
     champ_winrate = models.FloatField(null=True, default=-1)
 
 
-class Builds(models.Model):
-    champ_name = models.ForeignKey(Champion, on_delete=models.CASCADE, default="Default name")
-    item0 = models.IntegerField(null=True, default=1)
-    item1 = models.IntegerField(null=True, default=1)
-    item2 = models.IntegerField(null=True, default=1)
-    item3 = models.IntegerField(null=True, default=1)
-    item4 = models.IntegerField(null=True, default=1)
-    item5 = models.IntegerField(null=True, default=1)
-    win_rate = models.FloatField(null=True, default=1)
+class Items(models.Model):
+    item_id = models.IntegerField(primary_key=True)
+    item_name = models.CharField(max_length=200, default="default")
+    gold = models.IntegerField(null=True)
+    tags = ArrayField(models.CharField(max_length=30), size=10, null=True)
+    builds_into = ArrayField(models.CharField(max_length=30), size=10, null=True)
+    description = models.CharField(max_length=3000, null=True)
 
+
+class Champion_Items(models.Model):
+    info_key = models.CharField(primary_key=True, max_length=50, default="default000")
+    champ_name = models.ForeignKey(Champion, on_delete=models.CASCADE, default="Default name")
+    item_id = models.ForeignKey(Items, on_delete=models.CASCADE, default=0)
+    play_count = models.IntegerField(null=True)
+    
 
 class Participant(models.Model):
     match = models.ForeignKey(Match, on_delete=models.CASCADE, default=0)
