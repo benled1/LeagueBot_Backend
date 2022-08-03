@@ -22,7 +22,6 @@ def get_item_dict():
     item_dict = json.loads(response.content)
     return item_dict['data']
 
-
 class Ingest_Items(BaseCommand):
     def handle(self, *args, **kwargs):
         item_dict = get_item_dict()
