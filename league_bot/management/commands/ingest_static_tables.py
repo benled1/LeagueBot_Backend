@@ -10,6 +10,12 @@ from django.db.utils import IntegrityError
 from league_bot.models import Match, Participant, Champion, Items
 # from league_bot.stat_functions import champ_group
 
+def get_rune_dict():
+    response = requests.get(os.getenv('DATA_DRAGON_RUNE_URL'))
+    rune_dict = json.loads(response.content)
+    print(rune_dict)
+    pass
+
 
 def get_champ_dict():
     response = requests.get(os.getenv('DATA_DRAGON_CHAMP_URL'))
@@ -44,6 +50,13 @@ class Ingest_Items(BaseCommand):
                 description=item_text)
         print(item_dict)
 
+class Ingest_Runes(BaseCommand):
+    def handle(self, *args, **kwargs):
+        rune_dict = get_rune_dict()
+        
+        pass
+
+
 class Test(BaseCommand):
     """
     Create entries for a number of challenger players taken from the challenger api call.
@@ -58,4 +71,5 @@ class Test(BaseCommand):
 
 class Command(django_subcommands.SubCommands):
     subcommands = {"test": Test,
-                    "items": Ingest_Items}
+                    "items": Ingest_Items,
+                    "runes": Ingest_Runes}
