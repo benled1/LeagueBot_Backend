@@ -53,7 +53,11 @@ class Ingest_Items(BaseCommand):
 class Ingest_Runes(BaseCommand):
     def handle(self, *args, **kwargs):
         rune_dict = get_rune_dict()
-        
+        for major_rune in rune_dict:
+            rune_id = major_rune['id']
+            rune_name = major_rune['name']
+            for minor_rune in major_rune['slots']:
+                rune_id = minor_rune
         pass
 
 
