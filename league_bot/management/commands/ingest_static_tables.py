@@ -52,19 +52,22 @@ class Ingest_Items(BaseCommand):
 
 class Ingest_Runes(BaseCommand):
     def handle(self, *args, **kwargs):
+        Runes.objects.all().delete()
         rune_dict = get_rune_dict()
-        print(rune_dict[0])
+        rune_cat_list = ['Domination', 'Inspiration', 'Precision', 'Resolve', 'Sorcery']
         for rune in rune_dict:
             Runes.objects.update_or_create(
                 rune_id=rune['id'],
-                rune_name=rune['name']
+                rune_name=rune['name'],
+                rune_cat=None
             )
         for index in range(len(rune_dict)):
             for rune_dicts_list in rune_dict[index]['slots']:
                 for rune in rune_dicts_list['runes']:
                     Runes.objects.update_or_create(
                         rune_id=rune['id'],
-                        rune_name=rune['name']
+                        rune_name=rune['name'],
+                        rune_cat=rune_cat_list[index]
                     )
 
 class Test(BaseCommand):

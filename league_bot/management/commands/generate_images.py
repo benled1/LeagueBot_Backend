@@ -16,7 +16,7 @@ from PIL import ImageFont
 # from dotenv import load_dotenv
 
 from league_bot.image_functions.champ_stat_cards import get_champion_stat_card, get_item_build
-from league_bot.image_functions.champ_pictures import get_champion_picture, get_item_picture
+from league_bot.image_functions.champ_pictures import get_champion_picture, get_item_picture, get_rune_picture
 from django.core.management.base import BaseCommand
 from league_bot.models import Champion, Runes
 from league_bot.stat_functions.champion import get_item_counts
@@ -39,10 +39,12 @@ class UploadRunePictures(BaseCommand):
         rune_dicts = Runes.objects.values()
         for rune in rune_dicts:
             rune_id = rune['rune_id']
+            rune_id = get_rune_picture(rune_id)
+
             
-            print(f"Uploading {rune_id}...")
-            first_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"rune_pics/{rune_id}/{rune_id}.png")
-            first_object.upload_file(f"league_bot/tmp_images/rune_pics/{rune_id}.png")
+            # print(f"Uploading {rune_id}...")
+            # first_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"rune_pics/{rune_id}/{rune_id}.png")
+            # first_object.upload_file(f"league_bot/tmp_images/rune_pics/{rune_id}.png")
 
         
 
