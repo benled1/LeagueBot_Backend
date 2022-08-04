@@ -21,3 +21,6 @@ def get_item_picture(item_id):
         champ_img = Image.open(BytesIO(response.content))
         champ_img.save(f"league_bot/tmp_images/item_pics/{item_id}.png", "PNG")
         return item_id
+
+def get_rune_pictures(rune_name):
+    pass

@@ -59,12 +59,13 @@ class Ingest_Runes(BaseCommand):
                 rune_id=rune['id'],
                 rune_name=rune['name']
             )
-        for rune_dicts_list in rune_dict[0]['slots']:
-            for rune in rune_dicts_list['runes']:
-                Runes.objects.update_or_create(
-                    rune_id=rune['id'],
-                    rune_name=rune['name']
-                )
+        for index in range(len(rune_dict)):
+            for rune_dicts_list in rune_dict[index]['slots']:
+                for rune in rune_dicts_list['runes']:
+                    Runes.objects.update_or_create(
+                        rune_id=rune['id'],
+                        rune_name=rune['name']
+                    )
 
 class Test(BaseCommand):
     """

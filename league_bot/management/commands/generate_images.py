@@ -18,7 +18,7 @@ from PIL import ImageFont
 from league_bot.image_functions.champ_stat_cards import get_champion_stat_card, get_item_build
 from league_bot.image_functions.champ_pictures import get_champion_picture, get_item_picture
 from django.core.management.base import BaseCommand
-from league_bot.models import Champion
+from league_bot.models import Champion, Runes
 from league_bot.stat_functions.champion import get_item_counts
 
 
@@ -32,9 +32,21 @@ class Test(BaseCommand):
 
 class UploadRunePictures(BaseCommand):
     def handle(self, *args, **kwargs):
-        if not os.path.isdir(f"/{os.getenv('ROOT_DIR')}/league_bot/tmp_images/item_pics"):
-            path = os.path.join(f"/{os.getenv('ROOT_DIR')}/league_bot/", "tmp_images/item_pics")
+        if not os.path.isdir(f"/{os.getenv('ROOT_DIR')}/league_bot/tmp_images/rune_pics"):
+            path = os.path.join(f"/{os.getenv('ROOT_DIR')}/league_bot/", "tmp_images/rune_pics")
             os.mkdir(path)
+        s3_resource = boto3.resource('s3')
+        rune_dicts = Runes.objects.values()
+        for rune in rune_dicts:
+            rune_id = rune['rune_id']
+            
+            print(f"Uploading {rune_id}...")
+            first_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"rune_pics/{rune_id}/{rune_id}.png")
+            first_object.upload_file(f"league_bot/tmp_images/rune_pics/{rune_id}.png")
+
+        
+
+        
 class UploadItemPictures(BaseCommand):
     def handle(self, *args, **kwargs):
         if not os.path.isdir(f"/{os.getenv('ROOT_DIR')}/league_bot/tmp_images/item_pics"):
@@ -109,4 +121,5 @@ class Command(django_subcommands.SubCommands):
      "upload_champ_stat_cards": UploadChampionStatCards,
      "upload_champ_pics": UploadChampionPictures,
      "upload_item_pics": UploadItemPictures,
+     "upload_rune_pics": UploadRunePictures,
      "test": Test}
