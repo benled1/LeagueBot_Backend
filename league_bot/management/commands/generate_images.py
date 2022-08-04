@@ -30,7 +30,11 @@ class Test(BaseCommand):
         get_item_counts("Cassiopeia")
         pass
 
-
+class UploadRunePictures(BaseCommand):
+    def handle(self, *args, **kwargs):
+        if not os.path.isdir(f"/{os.getenv('ROOT_DIR')}/league_bot/tmp_images/item_pics"):
+            path = os.path.join(f"/{os.getenv('ROOT_DIR')}/league_bot/", "tmp_images/item_pics")
+            os.mkdir(path)
 class UploadItemPictures(BaseCommand):
     def handle(self, *args, **kwargs):
         if not os.path.isdir(f"/{os.getenv('ROOT_DIR')}/league_bot/tmp_images/item_pics"):

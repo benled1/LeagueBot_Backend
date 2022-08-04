@@ -7,14 +7,14 @@ import os
 from django.core.management.base import BaseCommand
 from league_bot.ingest_functions.save_tables import ingest_tables
 from django.db.utils import IntegrityError
-from league_bot.models import Match, Participant, Champion, Items
+from league_bot.models import Match, Participant, Champion, Items, Runes
 # from league_bot.stat_functions import champ_group
 
 def get_rune_dict():
     response = requests.get(os.getenv('DATA_DRAGON_RUNE_URL'))
     rune_dict = json.loads(response.content)
-    print(rune_dict)
-    pass
+    print(type(rune_dict))
+    return rune_dict
 
 
 def get_champ_dict():
@@ -53,13 +53,18 @@ class Ingest_Items(BaseCommand):
 class Ingest_Runes(BaseCommand):
     def handle(self, *args, **kwargs):
         rune_dict = get_rune_dict()
-        for major_rune in rune_dict:
-            rune_id = major_rune['id']
-            rune_name = major_rune['name']
-            for minor_rune in major_rune['slots']:
-                rune_id = minor_rune
-        pass
-
+        print(rune_dict[0])
+        for rune in rune_dict:
+            Runes.objects.update_or_create(
+                rune_id=rune['id'],
+                rune_name=rune['name']
+            )
+        for rune_dicts_list in rune_dict[0]['slots']:
+            for rune in rune_dicts_list['runes']:
+                Runes.objects.update_or_create(
+                    rune_id=rune['id'],
+                    rune_name=rune['name']
+                )
 
 class Test(BaseCommand):
     """
