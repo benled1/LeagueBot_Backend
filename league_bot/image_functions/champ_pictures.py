@@ -36,4 +36,4 @@ def get_rune_picture(rune_id):
         # print(response.status_code)
         # print(response.content)
         # print(rune_row['rune_name'])
-    pass
+        pass
