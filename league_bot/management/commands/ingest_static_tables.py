@@ -54,12 +54,13 @@ class Ingest_Runes(BaseCommand):
     def handle(self, *args, **kwargs):
         Runes.objects.all().delete()
         rune_dict = get_rune_dict()
-        rune_cat_list = ['Domination', 'Inspiration', 'Precision', 'Resolve', 'Sorcery']
+        # rune_cat_list = ['Domination', 'Inspiration', 'Precision', 'Resolve', 'Sorcery']
         for rune in rune_dict:
             Runes.objects.update_or_create(
                 rune_id=rune['id'],
                 rune_name=rune['name'],
-                rune_cat=None
+                # rune_cat=None,
+                rune_icon=rune['icon']
             )
         for index in range(len(rune_dict)):
             for rune_dicts_list in rune_dict[index]['slots']:
@@ -67,8 +68,11 @@ class Ingest_Runes(BaseCommand):
                     Runes.objects.update_or_create(
                         rune_id=rune['id'],
                         rune_name=rune['name'],
-                        rune_cat=rune_cat_list[index]
+                        # rune_cat=rune_cat_list[index],
+                        rune_icon=rune['icon']
                     )
+
+        
 
 class Test(BaseCommand):
     """

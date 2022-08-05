@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.core.management.base import BaseCommand
 from datetime import datetime
 from league_bot.ingest_functions.save_tables import ingest_tables
+from league_bot.stat_functions.clean_perks_field import separate_perk_fields
 from league_bot.models import Match, Participant
 from django.db.utils import IntegrityError
 
@@ -27,6 +28,10 @@ def insert_match_table(match_table_row):
         return "Failed"
     
 def insert_part_table(part_table_row):
+
+    # separate_perk_fields(part_table_row['perks'])
+    
+
     try:
         match_reference = Match.objects.get(match=part_table_row['match_id'])
     except:

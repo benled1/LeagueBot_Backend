@@ -20,6 +20,8 @@ from league_bot.image_functions.champ_pictures import get_champion_picture, get_
 from django.core.management.base import BaseCommand
 from league_bot.models import Champion, Runes
 from league_bot.stat_functions.champion import get_item_counts
+from league_bot.image_functions.find_runes import find_runes
+
 
 
 
@@ -27,7 +29,7 @@ from league_bot.stat_functions.champion import get_item_counts
 
 class Test(BaseCommand):
     def handle(self, *args, **kwargs):
-        get_item_counts("Cassiopeia")
+        find_runes("Aatrox")
         pass
 
 class UploadRunePictures(BaseCommand):
@@ -41,10 +43,9 @@ class UploadRunePictures(BaseCommand):
             rune_id = rune['rune_id']
             rune_id = get_rune_picture(rune_id)
 
-            
-            # print(f"Uploading {rune_id}...")
-            # first_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"rune_pics/{rune_id}/{rune_id}.png")
-            # first_object.upload_file(f"league_bot/tmp_images/rune_pics/{rune_id}.png")
+            print(f"Uploading {rune_id}...")
+            first_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"rune_pics/{rune_id}/{rune_id}.png")
+            first_object.upload_file(f"league_bot/tmp_images/rune_pics/{rune_id}.png")
 
         
 

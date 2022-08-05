@@ -22,7 +22,8 @@ class Champion(models.Model):
 class Runes(models.Model):
     rune_id = models.IntegerField(primary_key=True)
     rune_name = models.CharField(max_length=50, null=True)
-    rune_cat = models.CharField(max_length=50, null=True)
+    # rune_cat = models.CharField(max_length=50, null=True)
+    rune_icon = models.CharField(max_length=200, null=True)
 
 class Items(models.Model):
     item_id = models.IntegerField(primary_key=True)

@@ -25,15 +25,15 @@ def get_item_picture(item_id):
 
 def get_rune_picture(rune_id):
     rune_row = Runes.objects.filter(rune_id=rune_id).values()[0]
-    rune_cat = rune_row['rune_cat']
+    rune_image = rune_row['rune_icon']
     rune_name = rune_row['rune_name']
-    response = requests.get(f"{os.getenv(f'DATA_DRAGON_RUNE_IMAGE_URL')}{rune_cat}/{rune_name}/{rune_name}.png")
+    rune_id = rune_row['rune_id']
+    response = requests.get(f"{os.getenv(f'DATA_DRAGON_RUNE_IMAGE_URL')}{rune_image}")
     if response.status_code == 200:
         champ_img = Image.open(BytesIO(response.content))
-        
-        champ_img.save(f"league_bot/tmp_images/rune_pics/{rune_name}.png", "PNG")
+        print(f"Saving {rune_name}...")
+        champ_img.save(f"league_bot/tmp_images/rune_pics/{rune_id}.png", "PNG")
     else:
-        # print(response.status_code)
-        # print(response.content)
-        # print(rune_row['rune_name'])
-        pass
+
+        print(f"FAILED: {os.getenv('DATA_DRAGON_RUNE_IMAGE_URL')}{rune_image}")
+    return rune_id

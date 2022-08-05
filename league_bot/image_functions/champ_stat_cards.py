@@ -33,7 +33,7 @@ def get_champion_stat_card(champ_row):
 
     
     if champ_row['champ_name'] != 'MonkeyKing':
-        champ_name = champ_row['champ_name']
+        front_facing_champ_name = champ_row['champ_name']
         print(f"Adding build for {champ_name}")
         build_dict = get_item_build(champ_name=champ_name)
         add_items(build_dict=build_dict, stat_card=stat_card)
@@ -42,8 +42,8 @@ def get_champion_stat_card(champ_row):
         print(f"Adding build for {champ_name}")
         build_dict = get_item_build(champ_name=champ_name)
         add_items(build_dict=build_dict, stat_card=stat_card)
-        champ_name = "Wukong"
-    stat_card.save(f"league_bot/tmp_images/champ_stat_cards/{champ_name}.png", "PNG")
+        front_facing_champ_name = "Wukong"
+    stat_card.save(f"league_bot/tmp_images/champ_stat_cards/{front_facing_champ_name}.png", "PNG")
 
     return champ_name
 
