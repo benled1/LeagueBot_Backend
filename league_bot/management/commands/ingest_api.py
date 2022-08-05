@@ -29,7 +29,8 @@ def insert_match_table(match_table_row):
     
 def insert_part_table(part_table_row):
 
-    # separate_perk_fields(part_table_row['perks'])
+    perks, stat = separate_perk_fields(part_table_row['perks'])
+
     
 
     try:
@@ -55,7 +56,8 @@ def insert_part_table(part_table_row):
             quadra_kills = part_table_row['quadraKills'],
             total_time_spent_dead = part_table_row['totalTimeSpentDead'],
             triple_kills = part_table_row['tripleKills'],
-            perks = part_table_row['perks'],
+            perks = perks,
+            stat = stat,
             summoner_level = part_table_row['summonerLevel'],
             summoner_name = part_table_row['summonerName'],
             profile_icon = part_table_row['profileIcon'],

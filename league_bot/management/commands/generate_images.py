@@ -18,9 +18,10 @@ from PIL import ImageFont
 from league_bot.image_functions.champ_stat_cards import get_champion_stat_card, get_item_build
 from league_bot.image_functions.champ_pictures import get_champion_picture, get_item_picture, get_rune_picture
 from django.core.management.base import BaseCommand
-from league_bot.models import Champion, Runes
+from league_bot.models import Champion, Runes, Participant
 from league_bot.stat_functions.champion import get_item_counts
 from league_bot.image_functions.find_runes import find_runes
+from league_bot.stat_functions.clean_perks_field import separate_perk_fields
 
 
 
@@ -29,7 +30,8 @@ from league_bot.image_functions.find_runes import find_runes
 
 class Test(BaseCommand):
     def handle(self, *args, **kwargs):
-        find_runes("Aatrox")
+        part_row = Participant.objects.filter(id=1).values()[0]
+        separate_perk_fields(part_row['perks'])
         pass
 
 class UploadRunePictures(BaseCommand):

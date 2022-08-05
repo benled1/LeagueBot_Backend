@@ -60,6 +60,7 @@ class Participant(models.Model):
     
     # runes and perks
     perks = models.JSONField(null=True)
+    stat = models.JSONField(null=True)
 
     # account meta data
     summoner_level = models.IntegerField(null=True)
