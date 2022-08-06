@@ -6,7 +6,8 @@ from PIL import ImageDraw
 from PIL import ImageFont
 from dotenv import load_dotenv
 from .find_build import get_item_build
-from .add_pictures import add_items, add_winrate_playcount
+from .add_pictures import add_items, add_winrate_playcount, add_runes
+from .find_runes import get_rune_build
 from league_bot.models import Champion_Items, Champion, Items
 from django.db.models import Q
 
@@ -34,16 +35,19 @@ def get_champion_stat_card(champ_row):
     
     if champ_row['champ_name'] != 'MonkeyKing':
         front_facing_champ_name = champ_row['champ_name']
-        print(f"Adding build for {champ_name}")
-        build_dict = get_item_build(champ_name=champ_name)
+        print(f"Adding build for {front_facing_champ_name}")
+        build_dict = get_item_build(champ_name=front_facing_champ_name)
         add_items(build_dict=build_dict, stat_card=stat_card)
+        rune_dict = get_rune_build(champ_name=front_facing_champ_name)
+        add_runes(rune_dict=rune_dict, stat_card=stat_card)
     else:
         champ_name = champ_row['champ_name']
         print(f"Adding build for {champ_name}")
         build_dict = get_item_build(champ_name=champ_name)
         add_items(build_dict=build_dict, stat_card=stat_card)
+        rune_dict = get_rune_build(champ_name=champ_name)
         front_facing_champ_name = "Wukong"
     stat_card.save(f"league_bot/tmp_images/champ_stat_cards/{front_facing_champ_name}.png", "PNG")
 
-    return champ_name
+    return front_facing_champ_name
 

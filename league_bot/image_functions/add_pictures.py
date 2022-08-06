@@ -1,4 +1,4 @@
-from PIL import Image
+from PIL import Image, ImageOps
 from PIL import ImageDraw
 from PIL import ImageFont
 import boto3
@@ -22,7 +22,6 @@ def add_winrate_playcount(stat_card, champ_winrate, champ_play_count):
     draw.text((20, 300),f"{champ_play_count}",(115,91, 48),font=number_font)
     draw.text((20, 400),f"MATCHES",(115,91, 48),font=label_font)
     return stat_card
-
 
 
 def add_items(build_dict, stat_card):
@@ -90,4 +89,29 @@ def add_items(build_dict, stat_card):
     item = item.resize((round(width*1.5), round(height*1.5)))
     stat_card.paste(item, (x_pos, y_pos))
 
+
+def add_runes(rune_dict, stat_card):
+
+    if not os.path.isdir(f"/{os.getenv('ROOT_DIR')}/league_bot/tmp_images/rune_pics"):
+        try:
+            path = os.path.join(f"/{os.getenv('ROOT_DIR')}/league_bot", "tmp_images")
+            os.mkdir(path)
+            path = os.path.join(path, "rune_pics")
+            os.mkdir(path)
+        except FileExistsError:
+            path = os.path.join(path, "rune_pics")
+            os.mkdir(path)
+
+    s3_resource = boto3.resource('s3')
+    # add major specialty
+    major_specialty_id = rune_dict['perks']['major_rune_specialty']
+    major_specialty_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"rune_pics/{major_specialty_id}/{major_specialty_id}.png")
+    major_specialty_object.download_file(f"league_bot/tmp_images/rune_pics/{major_specialty_id}.png")
+    rune = Image.open(f"league_bot/tmp_images/rune_pics/{major_specialty_id}.png")
+    rune = ImageOps.fit(rune, rune.size, Image.ANTIALIAS)
+    print(f"MAJOR SEPCIALTY ID: {major_specialty_id}")
+    x_pos, y_pos = (300,300)
+    width, height = rune.size
+    rune = rune.resize((round(width), round(height)))
+    stat_card.paste(rune, (x_pos, y_pos))
     pass

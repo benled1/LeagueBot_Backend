@@ -20,18 +20,13 @@ from league_bot.image_functions.champ_pictures import get_champion_picture, get_
 from django.core.management.base import BaseCommand
 from league_bot.models import Champion, Runes, Participant
 from league_bot.stat_functions.champion import get_item_counts
-from league_bot.image_functions.find_runes import find_runes
+from league_bot.image_functions.find_runes import get_rune_build
 from league_bot.stat_functions.clean_perks_field import separate_perk_fields, clean_perks
-
-
-
-
 
 
 class Test(BaseCommand):
     def handle(self, *args, **kwargs):
-        part_row = Participant.objects.filter(id=1).values()[0]
-        clean_perks(part_row['perks'])
+        get_rune_build("Annie")
         pass
 
 class UploadRunePictures(BaseCommand):
