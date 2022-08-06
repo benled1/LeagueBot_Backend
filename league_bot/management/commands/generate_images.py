@@ -21,7 +21,7 @@ from django.core.management.base import BaseCommand
 from league_bot.models import Champion, Runes, Participant
 from league_bot.stat_functions.champion import get_item_counts
 from league_bot.image_functions.find_runes import find_runes
-from league_bot.stat_functions.clean_perks_field import separate_perk_fields
+from league_bot.stat_functions.clean_perks_field import separate_perk_fields, clean_perks
 
 
 
@@ -31,7 +31,7 @@ from league_bot.stat_functions.clean_perks_field import separate_perk_fields
 class Test(BaseCommand):
     def handle(self, *args, **kwargs):
         part_row = Participant.objects.filter(id=1).values()[0]
-        separate_perk_fields(part_row['perks'])
+        clean_perks(part_row['perks'])
         pass
 
 class UploadRunePictures(BaseCommand):

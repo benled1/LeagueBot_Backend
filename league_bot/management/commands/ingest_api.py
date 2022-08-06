@@ -1,3 +1,4 @@
+from distutils.command.clean import clean
 import pandas as pd
 import django_subcommands
 from django.utils import timezone
@@ -5,7 +6,7 @@ from django.utils import timezone
 from django.core.management.base import BaseCommand
 from datetime import datetime
 from league_bot.ingest_functions.save_tables import ingest_tables
-from league_bot.stat_functions.clean_perks_field import separate_perk_fields
+from league_bot.stat_functions.clean_perks_field import separate_perk_fields, clean_perks
 from league_bot.models import Match, Participant
 from django.db.utils import IntegrityError
 
@@ -29,7 +30,9 @@ def insert_match_table(match_table_row):
     
 def insert_part_table(part_table_row):
 
+    # make the perks dictionary more readable/parseable
     perks, stat = separate_perk_fields(part_table_row['perks'])
+    perks = clean_perks(perks)
 
     
 
