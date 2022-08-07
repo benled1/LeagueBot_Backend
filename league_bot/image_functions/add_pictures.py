@@ -104,14 +104,78 @@ def add_runes(rune_dict, stat_card):
 
     s3_resource = boto3.resource('s3')
     # add major specialty
+    major_cat_id = rune_dict['perks']['major_rune_cat']
+    major_cat_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"rune_pics/{major_cat_id}/{major_cat_id}.png")
+    major_cat_object.download_file(f"league_bot/tmp_images/rune_pics/{major_cat_id}.png")
+    rune = Image.open(f"league_bot/tmp_images/rune_pics/{major_cat_id}.png")
+    x_pos, y_pos = (500,0)
+    width, height = rune.size
+    rune = rune.resize((round(width*2), round(height*2)))
+    stat_card.paste(rune, (x_pos, y_pos), rune.convert('RGBA'))
+
+
     major_specialty_id = rune_dict['perks']['major_rune_specialty']
     major_specialty_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"rune_pics/{major_specialty_id}/{major_specialty_id}.png")
     major_specialty_object.download_file(f"league_bot/tmp_images/rune_pics/{major_specialty_id}.png")
     rune = Image.open(f"league_bot/tmp_images/rune_pics/{major_specialty_id}.png")
-    rune = ImageOps.fit(rune, rune.size, Image.ANTIALIAS)
-    print(f"MAJOR SEPCIALTY ID: {major_specialty_id}")
-    x_pos, y_pos = (300,300)
+    x_pos, y_pos = (500,50)
+    width, height = rune.size
+    rune = rune.resize((round(width*0.5), round(height*0.5)))
+    stat_card.paste(rune, (x_pos, y_pos), rune.convert('RGBA'))
+
+
+    major_rune_id = rune_dict['perks']['major_rune_1']
+    major_rune_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"rune_pics/{major_rune_id}/{major_rune_id}.png")
+    major_rune_object.download_file(f"league_bot/tmp_images/rune_pics/{major_rune_id}.png")
+    rune = Image.open(f"league_bot/tmp_images/rune_pics/{major_rune_id}.png")
+    x_pos, y_pos = (500,100)
+    width, height = rune.size
+    rune = rune.resize((64, 64))
+    stat_card.paste(rune, (x_pos, y_pos), rune.convert('RGBA'))
+
+    major_rune_id = rune_dict['perks']['major_rune_2']
+    major_rune_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"rune_pics/{major_rune_id}/{major_rune_id}.png")
+    major_rune_object.download_file(f"league_bot/tmp_images/rune_pics/{major_rune_id}.png")
+    rune = Image.open(f"league_bot/tmp_images/rune_pics/{major_rune_id}.png")
+    x_pos, y_pos = (500,150)
+    width, height = rune.size
+    rune = rune.resize((64, 64))
+    stat_card.paste(rune, (x_pos, y_pos), rune.convert('RGBA'))
+
+    major_rune_id = rune_dict['perks']['major_rune_3']
+    major_rune_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"rune_pics/{major_rune_id}/{major_rune_id}.png")
+    major_rune_object.download_file(f"league_bot/tmp_images/rune_pics/{major_rune_id}.png")
+    rune = Image.open(f"league_bot/tmp_images/rune_pics/{major_rune_id}.png")
+    x_pos, y_pos = (500,200)
+    width, height = rune.size
+    rune = rune.resize((64, 64))
+    stat_card.paste(rune, (x_pos, y_pos), rune.convert('RGBA'))
+
+    minor_cat_id = rune_dict['perks']['minor_rune_cat']
+    minor_rune_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"rune_pics/{minor_cat_id}/{minor_cat_id}.png")
+    minor_rune_object.download_file(f"league_bot/tmp_images/rune_pics/{minor_cat_id}.png")
+    rune = Image.open(f"league_bot/tmp_images/rune_pics/{minor_cat_id}.png")
+    x_pos, y_pos = (800,50)
     width, height = rune.size
     rune = rune.resize((round(width), round(height)))
-    stat_card.paste(rune, (x_pos, y_pos))
+    stat_card.paste(rune, (x_pos, y_pos), rune.convert('RGBA'))
+
+
+    minor_rune_id = rune_dict['perks']['minor_rune_1']
+    minor_rune_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"rune_pics/{minor_rune_id}/{minor_rune_id}.png")
+    minor_rune_object.download_file(f"league_bot/tmp_images/rune_pics/{minor_rune_id}.png")
+    rune = Image.open(f"league_bot/tmp_images/rune_pics/{minor_rune_id}.png")
+    x_pos, y_pos = (800,100)
+    width, height = rune.size
+    rune = rune.resize((64, 64))
+    stat_card.paste(rune, (x_pos, y_pos), rune.convert('RGBA'))
+
+    minor_rune_id = rune_dict['perks']['minor_rune_2']
+    minor_rune_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"rune_pics/{minor_rune_id}/{minor_rune_id}.png")
+    minor_rune_object.download_file(f"league_bot/tmp_images/rune_pics/{minor_rune_id}.png")
+    rune = Image.open(f"league_bot/tmp_images/rune_pics/{minor_rune_id}.png")
+    x_pos, y_pos = (800,200)
+    width, height = rune.size
+    rune = rune.resize((64, 64))
+    stat_card.paste(rune, (x_pos, y_pos), rune.convert('RGBA'))
     pass
