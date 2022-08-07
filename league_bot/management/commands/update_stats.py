@@ -50,9 +50,12 @@ class ChampionStats(BaseCommand):
                 print(f"INDEX:{index}")
                 Champion_Items.objects.update_or_create(
                     info_key=row['info_key'],
-                    champ_name=Champion.objects.get(champ_name=champion['champ_name']),
-                    item_id=Items.objects.get(item_id=index),
-                    play_count=row['counts']
+                    defaults={
+                    'info_key':row['info_key'],
+                    'champ_name':Champion.objects.get(champ_name=champion['champ_name']),
+                    'item_id':Items.objects.get(item_id=index),
+                    'play_count':row['counts']
+                    }
                 )
 
 
