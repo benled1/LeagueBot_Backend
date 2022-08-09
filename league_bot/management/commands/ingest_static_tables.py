@@ -43,33 +43,42 @@ class Ingest_Items(BaseCommand):
                 item_text = ""
             Items.objects.update_or_create(
                 item_id=item,
-                item_name=item_dict[item]['name'],
-                gold=item_dict[item]['gold']['total'],
-                tags=item_dict[item]['tags'],
-                builds_into=into,
-                description=item_text)
+                defaults={
+                'item_id':item,
+                'item_name':item_dict[item]['name'],
+                'gold':item_dict[item]['gold']['total'],
+                'tags':item_dict[item]['tags'],
+                'builds_into':into,
+                'description':item_text
+                }
+                )
+
         print(item_dict)
 
 class Ingest_Runes(BaseCommand):
     def handle(self, *args, **kwargs):
         Runes.objects.all().delete()
         rune_dict = get_rune_dict()
-        # rune_cat_list = ['Domination', 'Inspiration', 'Precision', 'Resolve', 'Sorcery']
+
         for rune in rune_dict:
             Runes.objects.update_or_create(
                 rune_id=rune['id'],
-                rune_name=rune['name'],
-                # rune_cat=None,
-                rune_icon=rune['icon']
+                defaults={
+                'rune_id':rune['id'],
+                'rune_name':rune['name'],
+                'rune_icon':rune['icon']
+                }
             )
         for index in range(len(rune_dict)):
             for rune_dicts_list in rune_dict[index]['slots']:
                 for rune in rune_dicts_list['runes']:
                     Runes.objects.update_or_create(
                         rune_id=rune['id'],
-                        rune_name=rune['name'],
-                        # rune_cat=rune_cat_list[index],
-                        rune_icon=rune['icon']
+                        defaults={
+                        'rune_id':rune['id'],
+                        'rune_name':rune['name'],
+                        'rune_icon':rune['icon']
+                        }
                     )
 
         
@@ -83,7 +92,9 @@ class Test(BaseCommand):
     def handle(self, *args, **kwargs):
         champ_name_list = get_champ_dict()
         for name in champ_name_list:
-            Champion.objects.update_or_create(champ_name = name)
+            Champion.objects.update_or_create(
+                champ_name = name,
+                defaults={'champ_name' : name})
 
 
 class Command(django_subcommands.SubCommands):
