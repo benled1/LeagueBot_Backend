@@ -100,10 +100,10 @@ class UploadChampionStatCards(BaseCommand):
         for champ_row in all_champ_rows:
             champ_name = get_champion_stat_card(champ_row=champ_row)
 
-            # print(f"Uploading {champ_name}...")
-            # print(todays_date)
-            # first_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"champ_stat_cards/{champ_name}/{champ_name}{todays_date}.png")
-            # first_object.upload_file(f"league_bot/tmp_images/champ_stat_cards/{champ_name}.png")
+            print(f"Uploading {champ_name}...")
+            print(todays_date)
+            first_object = s3_resource.Object(bucket_name="league-bot-image-bucket", key=f"champ_stat_cards/{champ_name}/{champ_name}{todays_date}.png")
+            first_object.upload_file(f"league_bot/tmp_images/champ_stat_cards/{champ_name}.png")
 
                 
 class Champions(BaseCommand):
