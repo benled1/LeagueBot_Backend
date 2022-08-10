@@ -1,3 +1,4 @@
+from distutils.command.clean import clean
 import pandas as pd
 import django_subcommands
 from django.utils import timezone
@@ -5,6 +6,7 @@ from django.utils import timezone
 from django.core.management.base import BaseCommand
 from datetime import datetime
 from league_bot.ingest_functions.save_tables import ingest_tables
+from league_bot.stat_functions.clean_perks_field import separate_perk_fields, clean_perks
 from league_bot.models import Match, Participant
 from django.db.utils import IntegrityError
 
@@ -27,6 +29,13 @@ def insert_match_table(match_table_row):
         return "Failed"
     
 def insert_part_table(part_table_row):
+
+    # make the perks dictionary more readable/parseable
+    perks, stat = separate_perk_fields(part_table_row['perks'])
+    perks = clean_perks(perks)
+
+    
+
     try:
         match_reference = Match.objects.get(match=part_table_row['match_id'])
     except:
@@ -50,7 +59,8 @@ def insert_part_table(part_table_row):
             quadra_kills = part_table_row['quadraKills'],
             total_time_spent_dead = part_table_row['totalTimeSpentDead'],
             triple_kills = part_table_row['tripleKills'],
-            perks = part_table_row['perks'],
+            perks = perks,
+            stat = stat,
             summoner_level = part_table_row['summonerLevel'],
             summoner_name = part_table_row['summonerName'],
             profile_icon = part_table_row['profileIcon'],
