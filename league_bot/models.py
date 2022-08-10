@@ -19,6 +19,11 @@ class Champion(models.Model):
     champ_play_count = models.IntegerField(null=True, default=-1)
     champ_winrate = models.FloatField(null=True, default=-1)
 
+class Runes(models.Model):
+    rune_id = models.IntegerField(primary_key=True)
+    rune_name = models.CharField(max_length=50, null=True)
+    # rune_cat = models.CharField(max_length=50, null=True)
+    rune_icon = models.CharField(max_length=200, null=True)
 
 class Items(models.Model):
     item_id = models.IntegerField(primary_key=True)
@@ -55,6 +60,7 @@ class Participant(models.Model):
     
     # runes and perks
     perks = models.JSONField(null=True)
+    stat = models.JSONField(null=True)
 
     # account meta data
     summoner_level = models.IntegerField(null=True)
