@@ -1,8 +1,18 @@
-# LeagueBot_Backend
-This is the backend application to the League Manager Discord Bot. This backend handles logic such as:
+# Gromp Bot Backend
+This repository holds the backend application for the discord bot that goes by the name "Gromp Bot".
 
-- Running ETLs from RIOT API
-- Storing data in a PostgreSQL db
-- Calculating statistics on the db data
-- generating infographics based on the statistics in the db
-- Housing the REST API which is used to communicate with the frontend discord bot
+Gromp Bot is a discord bot which provides easy accessibility to build, and rune information for the playable champions in League of Legends.
+
+## A High-level View of the Architecture
+
+<img src="https://league-bot-image-bucket.s3.amazonaws.com/readme_pictures/Highest_Level.png"/>
+
+## Functions of the Backend
+
+1. Ingests data from the Riot Games API to a PostgreSQL database about matches that have been played recently.
+2. Calculates statistics on the winrates, item builds, and rune builds for different champions based on the data ingested.
+3. Generates infographics to present this information and stores them in Amazon's S3 bucket.
+
+
+
+

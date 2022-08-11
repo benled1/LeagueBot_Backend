@@ -59,7 +59,6 @@ class ChampionStats(BaseCommand):
                 )
 
 
-
             """
             For next time:
             update all the fields in Champion_Items Model, all the info is there in item_counts df ^^^
