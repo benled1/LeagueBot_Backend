@@ -119,18 +119,28 @@ Insights are great and all, but they mean much if a user can't read them.
 
 The final piece of functionality provided by the backend is the generation of infographics. The purpose of these graphics is to display the insights in a way that is easy to read and pleasing to the eye. 
 
-Here is what a infographic for a champion looks like:
+Here is what a raw infographic for a champion looks like:
 
-<img>
+<img src="https://league-bot-image-bucket.s3.amazonaws.com/readme_pictures/Aatrox08-20-2022.png"/>
 
 Here is what a infographic looks like when posted to a discord channel:
 
-<img>
+<img src="https://league-bot-image-bucket.s3.amazonaws.com/readme_pictures/AatroxScrnsht.png"/>
 
 These graphics are constructed with PIL; an image manipulation package for Python. The generation of these images is controlled by another django command (generate_images). This command looks at the insights stored in the database to then generate an image that will display such information.
 
-Since the insights are stored in the database, the generate_images command has to first retrieve that information, and then use it to download the correct images from the S3 storage where all the asset images are stored.
+Since the insights are stored in the database, the generate_images command has to first retrieve that information, and then use it to download the correct images from the S3 storage, where all the asset images are stored.
 
+
+## Future Development Plans
+
+Currently this project is in the MVP stage of development. The end-to-end product is working, yet there are still so many more insights and feature I would like to add. Currently a list of those feature are:
+
+1. Insights in a specific players performance
+2. Graphs for player performance overtime
+3. More robust support for changes to League of Legends (if the game is updated)
+
+Although for now this project is what I have and I hope you enjoy playing around with it!
 
  
 
