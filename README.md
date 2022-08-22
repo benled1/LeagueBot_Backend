@@ -98,7 +98,41 @@ Once these operations of done the Participant and Match tables in the database s
 
 ### 2. Developing Insights
 
-The second functionality of the backend is to develop insights beyond what is given by the Riot Games API. This means looking at the sample data collected in the ETL step and using it to create and store more data!
+The second piece of functionality the backend provides is insight development. The backend develops insights beyond what is given by the Riot Games API. This means looking at the sample data collected in the ETL step and using it to create and store more useful data!
+
+Currently the backend focuses its efforts on providing insights for individual champions. There are four major champion insights that are developed currently.
+
+1. The number of matches the champion was played in.
+2. The % of matches played by the champion which ended in a win by the champion's team.
+3. The most played item build for the champion.
+4. The most played rune build for the champion.
+
+However, in order for these insights to be relevant day-to-day the backend needs someway of updating them as new data is ingested in the first ETL step. This is where django management commands are used. 
+
+Django management commands are ways of writing custom command line commands. In this case the backend has a command called update_stats. When this command is run it will re-calculate all the insights with any new data that has been ingested.
+
+Finally, these commands are set on a schedule using Heroku Scheduler. This means that they are run every 24 hours whenever new data is ingested through the ETL step. This allows for all insights to stay up to date with the current data.
+
+### 3. Generating Infographics
+
+Insights are great and all, but they mean much if a user can't read them.
+
+The final piece of functionality provided by the backend is the generation of infographics. The purpose of these graphics is to display the insights in a way that is easy to read and pleasing to the eye. 
+
+Here is what a infographic for a champion looks like:
+
+<img>
+
+Here is what a infographic looks like when posted to a discord channel:
+
+<img>
+
+These graphics are constructed with PIL; an image manipulation package for Python. The generation of these images is controlled by another django command (generate_images). This command looks at the insights stored in the database to then generate an image that will display such information.
+
+Since the insights are stored in the database, the generate_images command has to first retrieve that information, and then use it to download the correct images from the S3 storage where all the asset images are stored.
+
+
+ 
 
 
 
