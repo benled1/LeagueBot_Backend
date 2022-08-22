@@ -15,7 +15,9 @@ There are over 200 items a player can buy throughout a match, but only 6 can be 
 
 
 ## Try it out in Discord!
-make a discord channel with the Gromp Bot already invited, this will let people join that channel to test it out.
+Gromp Bot has a dedicated testing ground where you can try out the bots functions for yourself!
+
+Join the testing discord: https://discord.gg/vNqKQZwQ
 
 ## Running it locally
 Getting the Gromp Bot backend up and running locally requires the following steps:
