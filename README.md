@@ -19,8 +19,10 @@ Gromp Bot has a dedicated testing ground where you can try out the bots function
 
 Join the testing discord: https://discord.gg/vNqKQZwQ
 
-Try using the command: #champ <champion_name>
-
+Try using the command: 
+```
+#champ <champion_name>
+```
 Some champion names can include Annie, Aatrox, and Camille.
 
 Click [here](https://www.leagueoflegends.com/en-us/champions/) for a full list of champion names.
