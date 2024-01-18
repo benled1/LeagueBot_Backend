@@ -1,3 +1,4 @@
+# NOTE: This project has been deprecated due to a change in the Riot Games API :(
 # Gromp Bot Backend
 This repository holds the backend application for the discord bot that goes by the name "Gromp Bot".
 
